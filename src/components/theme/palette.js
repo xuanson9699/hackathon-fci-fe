@@ -1,0 +1,17 @@
+module.exports = {
+  primary: '#24292D',
+  secondary: '#505A62',
+  tertiari: '#8E9AA2',
+  brand_darkest: '#072A4A',
+  surface_sf2: '#EDEFF1',
+  surface_sf1: '#F7F8F8',
+  neutral_45: '#F9FAFA',
+  surface_white: '#FFF',
+  info_red: '#DF1C41',
+  info_green: '#2D9F76',
+  info_green_light: '#D5ECE4',
+  brand: '#0076CB',
+  stroke_st2: '#E3E6E8',
+  info_red_light: '#FFEFEF',
+  brand_lightest: '#F0F8FF',
+};
