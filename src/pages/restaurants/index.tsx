@@ -43,6 +43,8 @@ const Restaurants = () => {
     keepPreviousData: true,
   });
 
+  console.log('data', data)
+
   return (
     <>
       <header className="shrink-0 flex items-center shadow h-14 px-20 sticky z-50 bg-white top-0">
@@ -61,10 +63,11 @@ const Restaurants = () => {
           defaultFilter={defaultFilter}
         />
         <ClaimTable
-          data={dataRestaurantList.data}
+          loading={isLoading}
+          data={data?.data}
           filterCondition={filterCondition}
           setFilterCondition={setFilterCondition}
-          totalItem={1}
+          totalItem={data?.meta?.total ?? 0}
         />
       </div>
     </>

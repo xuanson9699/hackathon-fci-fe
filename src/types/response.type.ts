@@ -1,15 +1,15 @@
 type LoginResponse = {
-  data: {
+ 
     access_token: string;
     refresh_token: string;
-  };
+  
 };
 
 type PaginationResponse<T> = {
   code: string;
   message: string;
   data: T[];
-  metadata: ResponsePageOptions;
+  meta: ResponsePageOptions;
 };
 
 type ResponsePageOptions = {

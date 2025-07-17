@@ -15,7 +15,7 @@ import type { TableProps } from 'antd';
 
 // Interface for table data
 interface RestaurantTableProps<T = any> {
-  data: RestaurantItem[];
+  data?: RestaurantItem[];
   loading?: boolean;
   filterCondition: T;
   setFilterCondition?: (condition: T) => void;

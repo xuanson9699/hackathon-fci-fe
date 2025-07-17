@@ -7,6 +7,7 @@ import { PayloadPageOptions, RestaurantDetailResponse, RestaurantResponse } from
 type ResultLoginService = {
   getAll: (pageOptions?: PayloadPageOptions) => Promise<RestaurantResponse>;
   getDetail: (id: string) => Promise<RestaurantDetailResponse>;
+  uploadVideo: (file: File, id: string) => Promise<any>;
 };
 
 const useRestaurantService = (): ResultLoginService => {
@@ -29,15 +30,16 @@ const useRestaurantService = (): ResultLoginService => {
     formData.append('file', file);
 
     return httpClient.post(AppConfig.RESTAURANT.UPLOAD_VIDEO(id), formData, {
-      // headers: {
-      //   'Content-Type': 'multipart/form-data',
-      // },
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
     });
   };
 
   return {
     getAll,
     getDetail,
+    uploadVideo,
   };
 };
 

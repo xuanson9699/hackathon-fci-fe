@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect, useMemo, useRef, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useMemo, useRef } from 'react';
 
 import { ReloadOutlined, SearchOutlined, UploadOutlined } from '@ant-design/icons';
 import { Button, Input } from 'antd';
@@ -13,6 +13,9 @@ import { UploadItem, UploadStatus } from '@/types';
 
 import { FilterConditionType } from '..';
 import { simulateProgressRead } from '../helper';
+import { useMutation } from '@tanstack/react-query';
+import useRestaurantService from '@/services/restaurant.service';
+import { useParams } from 'react-router-dom';
 
 interface FilterCustomerBarProps {
   filterCondition: FilterConditionType;
@@ -31,8 +34,10 @@ const FilterCustomerBar = ({
   uploadQueue,
   setShowUploadDrawer = () => {},
 }: FilterCustomerBarProps) => {
+  const { id } = useParams<{ id: string }>();
   const isResetting = useRef(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { uploadVideo } = useRestaurantService();
 
   const { control, watch, reset } = useForm<any>({
     defaultValues: {
@@ -84,6 +89,13 @@ const FilterCustomerBar = ({
     }, 0);
   };
 
+  const updateClaimMutation = useMutation({
+    mutationFn: (file: File) => uploadVideo(file, id),
+    onSuccess: (data) => {
+     
+    },
+  });
+
   const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     setShowUploadDrawer(true);
     const files = Array.from(e.target.files || []);
@@ -108,6 +120,7 @@ const FilterCustomerBar = ({
           setUploadQueue((prev) =>
             prev.map((u) => (u.id === item.id ? { ...u, status: 'done' } : u)),
           );
+          updateClaimMutation.mutate(item.file)
         },
         () => {
           setUploadQueue((prev) =>
@@ -171,6 +184,7 @@ const FilterCustomerBar = ({
           className="text-secondary"
           onClick={handleClickUpload}
           disabled={checkIsDisableButton}
+          loading={checkIsDisableButton}
         >
           Upload Video
         </ButtonBase>

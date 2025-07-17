@@ -63,21 +63,21 @@ const useHttpClient = (): ResultHttpClient => {
       originalRequest._retry = true;
       if (!isRefreshing) {
         isRefreshing = true;
-        try {
-          const newAccessToken = await refreshToken();
-          if (!newAccessToken) {
-            logOut();
-            return;
-          }
-          originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
-          onRefreshed(newAccessToken);
-          return axios(originalRequest);
-        } catch (refreshError) {
-          logOut();
-          return Promise.reject(refreshError);
-        } finally {
-          isRefreshing = false;
-        }
+        // try {
+        //   const newAccessToken = await refreshToken();
+        //   if (!newAccessToken) {
+        //     logOut();
+        //     return;
+        //   }
+        //   originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
+        //   onRefreshed(newAccessToken);
+        //   return axios(originalRequest);
+        // } catch (refreshError) {
+        //   logOut();
+        //   return Promise.reject(refreshError);
+        // } finally {
+        //   isRefreshing = false;
+        // }
       }
       return new Promise((resolve) => {
         subscribeTokenRefresh((token) => {
