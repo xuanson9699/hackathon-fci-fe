@@ -9,7 +9,6 @@ import useRestaurantService from '@/services/restaurant.service';
 
 import FilterBar from './components/FilterBar';
 import ClaimTable from './components/RestaurantTable';
-import { dataRestaurantList } from './mockData';
 
 export type FilterConditionType = {
   page: number;
@@ -42,8 +41,6 @@ const Restaurants = () => {
     queryFn: () => getAll(filterCondition),
     keepPreviousData: true,
   });
-
-  console.log('data', data)
 
   return (
     <>

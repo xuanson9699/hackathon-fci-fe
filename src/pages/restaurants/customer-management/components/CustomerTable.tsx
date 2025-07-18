@@ -2,27 +2,18 @@ import { Image, Table, TableColumnsType, type TableProps } from 'antd';
 
 import TableComponent from '@/components/ui/table-component';
 import { formatDateTime } from '@/components/utils/date';
-import { RestaurantEvenSubItem, RestaurantEventItem } from '@/types';
-
-import { dataRestaurantDetail } from '../../mockData';
+import { RestaurantDetailResponse, RestaurantEvenSubItem, RestaurantEventItem } from '@/types';
 
 // Interface for table data
 interface CustomerTableProps<T = any> {
-  data: any[];
+  data?: RestaurantDetailResponse;
   loading?: boolean;
   filterCondition: T;
   setFilterCondition?: (condition: T) => void;
-  totalItem: number;
 }
 
 const CustomerTable: React.FC<CustomerTableProps> = (props) => {
-  const {
-    data = [],
-    loading = false,
-    filterCondition,
-    setFilterCondition = () => {},
-    totalItem = 0,
-  } = props;
+  const { data, loading = false, filterCondition, setFilterCondition = () => {} } = props;
 
   const columns: TableProps<RestaurantEventItem>['columns'] = [
     {
@@ -37,7 +28,7 @@ const CustomerTable: React.FC<CustomerTableProps> = (props) => {
       key: 'image_start',
       width: 120,
       render: (value: string) => {
-        return <Image src={value} alt="" className="!w-20 object-cover" />;
+        return <Image src={value} alt="" className="!w-20 object-cover" loading="lazy" />;
       },
     },
     {
@@ -46,7 +37,7 @@ const CustomerTable: React.FC<CustomerTableProps> = (props) => {
       key: 'image_end',
       width: 120,
       render: (value: string) => {
-        return <Image src={value} alt="" className="!w-20 object-cover" />;
+        return <Image src={value} alt="" className="!w-20 object-cover" loading="lazy" />;
       },
     },
     {
@@ -77,7 +68,7 @@ const CustomerTable: React.FC<CustomerTableProps> = (props) => {
       key: 'image_start',
       width: 120,
       render: (value: string) => {
-        return <Image src={value} alt="" className="!w-20 object-cover" />;
+        return <Image src={value} alt="" className="!w-20 object-cover" loading="lazy" />;
       },
     },
     {
@@ -86,7 +77,7 @@ const CustomerTable: React.FC<CustomerTableProps> = (props) => {
       key: 'image_end',
       width: 120,
       render: (value: string) => {
-        return <Image src={value} alt="" className="!w-20 object-cover" />;
+        return <Image src={value} alt="" className="!w-20 object-cover" loading="lazy" />;
       },
     },
     {
@@ -110,7 +101,7 @@ const CustomerTable: React.FC<CustomerTableProps> = (props) => {
   ];
 
   const expandedRowRender = (_: RestaurantEvenSubItem, index: number) => {
-    const dataSubEvent = dataRestaurantDetail?.events?.[index]?.sub_events;
+    const dataSubEvent = data?.events?.[index]?.sub_events;
     return (
       <Table<RestaurantEvenSubItem>
         columns={expandColumns}
@@ -124,14 +115,15 @@ const CustomerTable: React.FC<CustomerTableProps> = (props) => {
     <>
       <TableComponent
         columns={columns}
-        dataSource={dataRestaurantDetail?.events}
+        dataSource={data?.events}
         filterCondition={filterCondition}
         setFilterCondition={setFilterCondition}
         loading={loading}
-        totalItem={totalItem}
+        totalItem={data?.meta?.total}
         showPagination
         expandableConfig={{ expandedRowRender, defaultExpandedRowKeys: ['0'] }}
         rowKey="person_external_id"
+        scrollY="70vh"
       />
     </>
   );

@@ -28,6 +28,7 @@ interface TableComponentProps<T extends object, F = any> {
   summary?: TableProps<T>['summary'];
   rowClassName?: (record: T, index?: number) => string;
   expandableConfig?: TableProps<T>['expandable'];
+  virtual?: boolean
 }
 
 const useStyle = createStyles(({ css }) => ({
@@ -59,6 +60,7 @@ const TableComponent = <T extends object>({
   summary,
   rowClassName = () => '',
   expandableConfig,
+  virtual = false
 }: TableComponentProps<T>) => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
@@ -138,6 +140,7 @@ const TableComponent = <T extends object>({
           style: { cursor: 'pointer' },
         })}
         summary={summary}
+        virtual={virtual}
       />
 
       {showPagination && (

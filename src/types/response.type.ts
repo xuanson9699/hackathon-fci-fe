@@ -1,8 +1,6 @@
 type LoginResponse = {
- 
-    access_token: string;
-    refresh_token: string;
-  
+  access_token: string;
+  refresh_token: string;
 };
 
 type PaginationResponse<T> = {
@@ -33,7 +31,9 @@ type RestaurantItem = {
   name: string;
   created_by: string;
   created_at: string;
-  number_video?: number;
+  video_count?: number;
+
+  latest_uploaded: string;
 };
 
 type RestaurantResponse = PaginationResponse<RestaurantItem>;
@@ -67,6 +67,7 @@ type RestaurantDetailResponse = {
   created_at: string;
   events: RestaurantEventItem[];
   videos: RestaurantVideo[];
+  meta: ResponsePageOptions;
 };
 
 export type {

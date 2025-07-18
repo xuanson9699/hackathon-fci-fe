@@ -16,7 +16,7 @@ import UploadProgressDrawer from './components/UploadProgressBox';
 export type FilterConditionType = {
   page: number;
   page_size: number;
-  search_term: string;
+  person_external_id: string;
   start_time?: string;
   end_time?: string;
   order?: string;
@@ -26,7 +26,7 @@ export type FilterConditionType = {
 const defaultFilter = {
   page: 1,
   page_size: 10,
-  search_term: '',
+  person_external_id: '',
   start_time: undefined,
   end_time: undefined,
   order: undefined,
@@ -48,9 +48,10 @@ const CustommerManagement = () => {
   const { getDetail } = useRestaurantService();
 
   const { data, isLoading } = useQuery({
-    queryKey: [GET_RESTAURANT_DETAIL_QUERY_KEY, id],
-    queryFn: () => getDetail(id ?? ''),
+    queryKey: [GET_RESTAURANT_DETAIL_QUERY_KEY, id, filterCondition],
+    queryFn: () => getDetail(id ?? '', filterCondition),
     keepPreviousData: true,
+    refetchInterval: 10000,
   });
 
   return (
@@ -81,10 +82,10 @@ const CustommerManagement = () => {
           setShowUploadDrawer={setShowUploadDrawer}
         />
         <CustomerTable
-          data={[{ id: '1' }]}
+          data={data}
           filterCondition={filterCondition}
           setFilterCondition={setFilterCondition}
-          totalItem={1}
+          loading={isLoading}
         />
       </div>
       {showUploadDrawer && (

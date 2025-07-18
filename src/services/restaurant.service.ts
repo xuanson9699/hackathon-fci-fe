@@ -2,12 +2,18 @@ import queryString from 'query-string';
 
 import useHttpClient from '@/components/hooks/useHttpClient';
 import AppConfig from '@/configs/AppConfig';
-import { PayloadPageOptions, RestaurantDetailResponse, RestaurantResponse } from '@/types';
+import {
+  PayloadPageOptions,
+  RestaurantDetailResponse,
+  RestaurantItem,
+  RestaurantResponse,
+} from '@/types';
 
 type ResultLoginService = {
   getAll: (pageOptions?: PayloadPageOptions) => Promise<RestaurantResponse>;
-  getDetail: (id: string) => Promise<RestaurantDetailResponse>;
+  getDetail: (id: string, pageOptions?: PayloadPageOptions) => Promise<RestaurantDetailResponse>;
   uploadVideo: (file: File, id: string) => Promise<any>;
+  createRestaurant: (name: string) => Promise<RestaurantItem>;
 };
 
 const useRestaurantService = (): ResultLoginService => {
@@ -21,25 +27,34 @@ const useRestaurantService = (): ResultLoginService => {
     return httpClient.get<RestaurantResponse>(AppConfig.RESTAURANT.GET_ALL(queryParams));
   };
 
-  const getDetail = (id: string) => {
-    return httpClient.get<RestaurantDetailResponse>(AppConfig.RESTAURANT.GET_DETAIL(id));
+  const getDetail = (id: string, pageOptions?: PayloadPageOptions) => {
+    let queryParams = '';
+    if (pageOptions) {
+      queryParams = queryString.stringify(pageOptions);
+    }
+    return httpClient.get<RestaurantDetailResponse>(
+      AppConfig.RESTAURANT.GET_DETAIL(id, queryParams),
+    );
   };
 
   const uploadVideo = (file: File, id: string) => {
     const formData = new FormData();
     formData.append('file', file);
 
-    return httpClient.post(AppConfig.RESTAURANT.UPLOAD_VIDEO(id), formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
+    return httpClient.post(AppConfig.RESTAURANT.UPLOAD_VIDEO(id), formData);
+  };
+
+  const createRestaurant = (name: string) => {
+    const formData = new FormData();
+    formData.append('name', name);
+    return httpClient.post<RestaurantItem>(AppConfig.RESTAURANT.CREATE_NEW(), formData);
   };
 
   return {
     getAll,
     getDetail,
     uploadVideo,
+    createRestaurant,
   };
 };
 

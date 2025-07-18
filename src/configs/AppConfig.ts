@@ -10,8 +10,9 @@ export default class AppConfig {
 
   public static readonly RESTAURANT = {
     GET_ALL: (param: string) => `restaurants?${param}`,
-    GET_DETAIL: (id: string) => `restaurants/${id}`,
+    GET_DETAIL: (id: string, queryParams: string) => `restaurants/${id}?${queryParams}`,
     UPLOAD_VIDEO: (id: string) => `restaurants/${id}/videos`,
+    CREATE_NEW: () => 'restaurants',
   };
 
   // User

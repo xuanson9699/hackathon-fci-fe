@@ -6,7 +6,6 @@ import { Controller, useForm } from 'react-hook-form';
 
 import { useDebouncedValue } from '@/components/hooks';
 import ButtonBase from '@/components/ui/button-base';
-import DateRangePicker from '@/components/ui/date-range-picker';
 
 import { FilterConditionType } from '..';
 import DrawerAddNew from './DrawerAddNew';
@@ -59,7 +58,8 @@ const FilterBar = ({ filterCondition, setFilterCondition, defaultFilter }: Filte
   return (
     <>
       <div className="flex items-conter justify-between">
-        <div className="flex gap-4">
+        <span />
+        {/* <div className="flex gap-4">
           <Controller
             name="search_term"
             control={control}
@@ -83,7 +83,7 @@ const FilterBar = ({ filterCondition, setFilterCondition, defaultFilter }: Filte
           >
             Clear
           </Button>
-        </div>
+        </div> */}
         <ButtonBase
           icon={<PlusOutlined className="text-xs text-white" />}
           type="primary"

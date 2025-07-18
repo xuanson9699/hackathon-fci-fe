@@ -55,11 +55,11 @@ const RestaurantTable: React.FC<RestaurantTableProps> = (props) => {
             <StyledCol
               key={item.restaurant_id}
               span={8}
-              className="group flex transition-all duration-200 shadow-md hover:shadow-lg hover:opacity-95 cursor-pointer"
+              className="group flex transition-all duration-200 hover:shadow-lg hover:opacity-95 cursor-pointer"
               onClick={() => handleNavigate(item)}
             >
               <Card
-                title={<a href="#">{item.name}</a>}
+                title={<a>{item.name}</a>}
                 size="small"
                 style={{ flex: 1 }}
                 className="group-hover-card"
@@ -69,13 +69,13 @@ const RestaurantTable: React.FC<RestaurantTableProps> = (props) => {
                     <Col span={8} className="text-secondary">
                       Video
                     </Col>
-                    <Col span={16}>{item.number_video ?? 20}</Col>
+                    <Col span={16}>{item.video_count}</Col>
                   </Row>
                   <Row>
                     <Col span={8} className="text-secondary">
                       Latest Uploadded
                     </Col>
-                    <Col span={16}>{formatDateTime(item.created_at)}</Col>
+                    <Col span={16}>{formatDateTime(item.latest_uploaded)}</Col>
                   </Row>
                 </div>
               </Card>

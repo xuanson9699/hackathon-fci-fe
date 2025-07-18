@@ -1,5 +1,5 @@
 import { CloseOutlined } from "@ant-design/icons";
-import { Drawer, Progress, Button } from "antd";
+import { Progress, Button } from "antd";
 import styled from "styled-components";
 
 import { UploadItem } from "@/types";

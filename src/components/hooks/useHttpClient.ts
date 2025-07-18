@@ -41,7 +41,7 @@ type ResultHttpClient = {
   ) => Promise<T>;
 };
 
-let isRefreshing = false;
+const isRefreshing = false;
 let refreshSubscribers: ((token: string) => void)[] = [];
 
 const subscribeTokenRefresh = (callback: (token: string) => void) => {
@@ -60,31 +60,33 @@ const useHttpClient = (): ResultHttpClient => {
   const handleError = async (error: any) => {
     const originalRequest = error.config;
     if (error?.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
-      if (!isRefreshing) {
-        isRefreshing = true;
-        // try {
-        //   const newAccessToken = await refreshToken();
-        //   if (!newAccessToken) {
-        //     logOut();
-        //     return;
-        //   }
-        //   originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
-        //   onRefreshed(newAccessToken);
-        //   return axios(originalRequest);
-        // } catch (refreshError) {
-        //   logOut();
-        //   return Promise.reject(refreshError);
-        // } finally {
-        //   isRefreshing = false;
-        // }
-      }
-      return new Promise((resolve) => {
-        subscribeTokenRefresh((token) => {
-          originalRequest.headers['Authorization'] = `Bearer ${token}`;
-          resolve(axios(originalRequest));
-        });
-      });
+      logOut();
+      return;
+      // originalRequest._retry = true;
+      // if (!isRefreshing) {
+      //   isRefreshing = true;
+      //   try {
+      //     const newAccessToken = await refreshToken();
+      //     if (!newAccessToken) {
+      //       logOut();
+      //       return;
+      //     }
+      //     originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
+      //     onRefreshed(newAccessToken);
+      //     return axios(originalRequest);
+      //   } catch (refreshError) {
+      //     logOut();
+      //     return Promise.reject(refreshError);
+      //   } finally {
+      //     isRefreshing = false;
+      //   }
+      // }
+      // return new Promise((resolve) => {
+      //   subscribeTokenRefresh((token) => {
+      //     originalRequest.headers['Authorization'] = `Bearer ${token}`;
+      //     resolve(axios(originalRequest));
+      //   });
+      // });
     } else {
       console.error(error);
       setNoti({

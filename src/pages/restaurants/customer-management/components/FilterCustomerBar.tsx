@@ -1,21 +1,22 @@
 import { Dispatch, SetStateAction, useEffect, useMemo, useRef } from 'react';
 
 import { ReloadOutlined, SearchOutlined, UploadOutlined } from '@ant-design/icons';
+import { useMutation } from '@tanstack/react-query';
 import { Button, Input } from 'antd';
 import dayjs from 'dayjs';
 import { Controller, useForm } from 'react-hook-form';
+import { useParams } from 'react-router-dom';
 
 import { useDebouncedValue } from '@/components/hooks';
 import ButtonBase from '@/components/ui/button-base';
 import DateRangePicker from '@/components/ui/date-range-picker';
 import { generateUUID } from '@/components/utils';
+import { convertLocalToUTC } from '@/components/utils/date';
+import useRestaurantService from '@/services/restaurant.service';
 import { UploadItem, UploadStatus } from '@/types';
 
 import { FilterConditionType } from '..';
 import { simulateProgressRead } from '../helper';
-import { useMutation } from '@tanstack/react-query';
-import useRestaurantService from '@/services/restaurant.service';
-import { useParams } from 'react-router-dom';
 
 interface FilterCustomerBarProps {
   filterCondition: FilterConditionType;
@@ -41,7 +42,7 @@ const FilterCustomerBar = ({
 
   const { control, watch, reset } = useForm<any>({
     defaultValues: {
-      search_term: filterCondition.search_term,
+      person_external_id: filterCondition.person_external_id,
       dateRange:
         filterCondition.start_time && filterCondition.end_time
           ? [dayjs(filterCondition.start_time), dayjs(filterCondition.end_time)]
@@ -49,7 +50,7 @@ const FilterCustomerBar = ({
     },
   });
 
-  const search_term = useDebouncedValue(watch('search_term'));
+  const person_external_id = useDebouncedValue(watch('person_external_id'));
   const dateRange = watch('dateRange');
 
   useEffect(() => {
@@ -58,12 +59,12 @@ const FilterCustomerBar = ({
     let end_time = undefined;
 
     if (dateRange && dateRange.length === 2) {
-      start_time = dateRange[0].startOf('day').format('YYYY-MM-DD');
-      end_time = dateRange[1].endOf('day').format('YYYY-MM-DD');
+      start_time = convertLocalToUTC(dateRange[0]);
+      end_time = convertLocalToUTC(dateRange[1]);
     }
 
     const condition = {
-      search_term,
+      person_external_id,
       start_time,
       end_time,
     };
@@ -72,12 +73,12 @@ const FilterCustomerBar = ({
       ...prevFilter,
       ...condition,
     }));
-  }, [search_term, dateRange, setFilterCondition]);
+  }, [person_external_id, dateRange, setFilterCondition]);
 
   const handleResetFilter = () => {
     isResetting.current = true;
     reset({
-      search_term: defaultFilter.search_term,
+      person_external_id: defaultFilter.person_external_id,
       dateRange: null,
     });
 
@@ -90,10 +91,7 @@ const FilterCustomerBar = ({
   };
 
   const updateClaimMutation = useMutation({
-    mutationFn: (file: File) => uploadVideo(file, id),
-    onSuccess: (data) => {
-     
-    },
+    mutationFn: (file: File) => uploadVideo(file, id ?? ''),
   });
 
   const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -120,7 +118,7 @@ const FilterCustomerBar = ({
           setUploadQueue((prev) =>
             prev.map((u) => (u.id === item.id ? { ...u, status: 'done' } : u)),
           );
-          updateClaimMutation.mutate(item.file)
+          updateClaimMutation.mutate(item.file);
         },
         () => {
           setUploadQueue((prev) =>
@@ -149,7 +147,7 @@ const FilterCustomerBar = ({
       <div className="flex items-conter justify-between">
         <div className="flex gap-4">
           <Controller
-            name="search_term"
+            name="person_external_id"
             control={control}
             render={({ field }) => (
               <Input
@@ -157,7 +155,7 @@ const FilterCustomerBar = ({
                 allowClear
                 placeholder={''}
                 prefix={<SearchOutlined className="text-gray-400" />}
-                onClear={() => setFilterCondition({ ...filterCondition, search_term: '' })}
+                onClear={() => setFilterCondition({ ...filterCondition, person_external_id: '' })}
                 className="w-full sm:w-88"
               />
             )}
@@ -166,7 +164,7 @@ const FilterCustomerBar = ({
             name="dateRange"
             control={control}
             render={({ field: { ref: _ref, ...rest } }) => (
-              <DateRangePicker {...rest} className="w-full sm:w-76" allowClear />
+              <DateRangePicker {...rest} className="w-full sm:w-96" allowClear showTime />
             )}
           />
           <Button

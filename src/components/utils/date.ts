@@ -1,5 +1,7 @@
 import dayjs, { extend } from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
+import utc from 'dayjs/plugin/utc';
+dayjs.extend(utc);
 
 import { FORMAT_DATE } from '../constants';
 
@@ -34,4 +36,8 @@ const formatDateTime = (date: Date | string | undefined, format: string = FORMAT
   return parsedDate?.isValid() ? parsedDate.format(format) : '---';
 };
 
-export { formatDateTime };
+const convertLocalToUTC = (localDate: string | Date): string => {
+  return dayjs(localDate).utc().format(); // ISO 8601 string ở UTC+0
+};
+
+export { formatDateTime, convertLocalToUTC };
