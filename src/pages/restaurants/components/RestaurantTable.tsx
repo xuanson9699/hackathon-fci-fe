@@ -1,17 +1,13 @@
 import { useState } from 'react';
 
-import { DeleteOutlined, EyeOutlined } from '@ant-design/icons';
-import { Button, Card, Col, Row } from 'antd';
-import { Link, useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
+import { Card, Col, Row } from 'antd';
+import { useNavigate } from 'react-router-dom';
+import { styled } from 'styled-components';
 
 import ConfirmModal from '@/components/ui/confirm-modal';
 import PaginationControl from '@/components/ui/pagination-control';
-import TableComponent from '@/components/ui/table-component';
 import { formatDateTime } from '@/components/utils/date';
 import { RestaurantItem } from '@/types';
-
-import type { TableProps } from 'antd';
 
 // Interface for table data
 interface RestaurantTableProps<T = any> {

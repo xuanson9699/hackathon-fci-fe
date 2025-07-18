@@ -1,8 +1,8 @@
-import { CloseOutlined } from "@ant-design/icons";
-import { Progress, Button } from "antd";
-import styled from "styled-components";
+import { CloseOutlined } from '@ant-design/icons';
+import { Progress, Button } from 'antd';
+import { styled } from 'styled-components';
 
-import { UploadItem } from "@/types";
+import { UploadItem } from '@/types';
 
 type Props = {
   queue: UploadItem[];
@@ -11,13 +11,13 @@ type Props = {
 
 const UploadBox = ({ queue, onClose }: Props) => {
   const handleShowStatus = (item: UploadItem) => {
-    if (item.status === "error") {
-      return "exception";
+    if (item.status === 'error') {
+      return 'exception';
     }
-    if (item.status === "done") {
-      return "success";
+    if (item.status === 'done') {
+      return 'success';
     }
-    return "active";
+    return 'active';
   };
   if (queue.length === 0) return null;
 
@@ -35,10 +35,7 @@ const UploadBox = ({ queue, onClose }: Props) => {
       </div>
       <div className="max-h-60 overflow-y-auto space-y-3 py-2 px-4">
         {queue.map((item) => (
-          <StyledItemFile
-            key={item.id}
-            className="flex items-center justify-between p-1"
-          >
+          <StyledItemFile key={item.id} className="flex items-center justify-between p-1">
             <div className="truncate text-sm">{item.file.name}</div>
             <Progress
               percent={item.progress}

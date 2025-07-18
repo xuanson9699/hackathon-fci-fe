@@ -7,7 +7,7 @@ import PageInput from '../PageInput';
 
 const { Option } = Select;
 
-interface PaginationProps<T extends object, F = any> {
+interface PaginationProps<_ extends object, F = any> {
   filterCondition?: F;
   setFilterCondition?: (condition: F) => void;
   totalItem?: number;
