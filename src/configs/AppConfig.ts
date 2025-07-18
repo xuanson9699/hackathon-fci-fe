@@ -13,6 +13,8 @@ export default class AppConfig {
     GET_DETAIL: (id: string, queryParams: string) => `restaurants/${id}?${queryParams}`,
     UPLOAD_VIDEO: (id: string) => `restaurants/${id}/videos`,
     CREATE_NEW: () => 'restaurants',
+    GET_VIEDEOS_UPLOADED: (id: string, queryParams: string) =>
+      `restaurants/${id}/videos?${queryParams}`,
   };
 
   // User

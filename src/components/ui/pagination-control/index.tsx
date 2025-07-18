@@ -18,22 +18,22 @@ const PaginationControl = <T extends object>({
   setFilterCondition = () => {},
   totalItem = 0,
 }: PaginationProps<T>) => {
-  const startItem = (filterCondition.page - 1) * filterCondition.page_size + 1;
-  const endItem = Math.min(filterCondition.page * filterCondition.page_size, totalItem);
-  const totalPage = Math.ceil(totalItem / filterCondition.page_size);
+  const startItem = (filterCondition.page - 1) * filterCondition.per_page + 1;
+  const endItem = Math.min(filterCondition.page * filterCondition.per_page, totalItem);
+  const totalPage = Math.ceil(totalItem / filterCondition.per_page);
 
   return (
     <div className="flex items-center justify-between px-4 py-3 border-t border-gray-200">
       <div className="flex items-center gap-4 h-8">
         <span className="text-[16px] text-secondary">Rows per page</span>
         <Select
-          value={filterCondition?.page_size}
+          value={filterCondition?.per_page}
           className="w-15 text-base bg-[white] rounded h-7 text-secondary"
           disabled={false}
           onChange={(value) => {
             setFilterCondition({
               ...filterCondition,
-              page_size: value,
+              per_page: value,
               page: 1,
             });
           }}

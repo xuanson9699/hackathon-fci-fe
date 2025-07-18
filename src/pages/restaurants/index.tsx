@@ -12,7 +12,7 @@ import ClaimTable from './components/RestaurantTable';
 
 export type FilterConditionType = {
   page: number;
-  page_size: number;
+  per_page: number;
   search_term: string;
   start_time?: string;
   end_time?: string;
@@ -22,7 +22,7 @@ export type FilterConditionType = {
 
 const defaultFilter = {
   page: 1,
-  page_size: 10,
+  per_page: 10,
   search_term: '',
   order: undefined,
   sort_by: undefined,

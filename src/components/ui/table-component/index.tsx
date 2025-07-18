@@ -28,7 +28,7 @@ interface TableComponentProps<T extends object, F = any> {
   summary?: TableProps<T>['summary'];
   rowClassName?: (record: T, index?: number) => string;
   expandableConfig?: TableProps<T>['expandable'];
-  virtual?: boolean
+  virtual?: boolean;
 }
 
 const useStyle = createStyles(({ css }) => ({
@@ -60,7 +60,7 @@ const TableComponent = <T extends object>({
   summary,
   rowClassName = () => '',
   expandableConfig,
-  virtual = false
+  virtual = false,
 }: TableComponentProps<T>) => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
@@ -93,7 +93,7 @@ const TableComponent = <T extends object>({
     let order: 'asc' | 'desc' | undefined;
 
     if (!Array.isArray(sorter)) {
-      newPageSize = filterCondition.page_size || 10;
+      newPageSize = filterCondition.per_page || 10;
       current = filterCondition.page || 1;
       sort_by = sorter.field as string;
       order = sorter.order ? orderMap[sorter.order as 'ascend' | 'descend'] : undefined;
@@ -102,7 +102,7 @@ const TableComponent = <T extends object>({
     setFilterCondition({
       ...filterCondition,
       page: current,
-      page_size: newPageSize,
+      per_page: newPageSize,
       sort_by,
       order,
     });
