@@ -12,7 +12,7 @@ const MainLayout = (): JSX.Element => {
 
   useEffect(() => {
     if (!access_token) {
-      // navigate('/login');
+      navigate('/login');
     }
   }, [navigate, access_token]);
 

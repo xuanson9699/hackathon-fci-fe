@@ -3,7 +3,7 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 import utc from 'dayjs/plugin/utc';
 dayjs.extend(utc);
 
-import { FORMAT_DATE } from '../constants';
+import { DATE_FORMAT_DDMMYYYY } from '../constants';
 
 extend(customParseFormat);
 
@@ -16,7 +16,10 @@ const SUPPORTED_FORMATS = [
   'YYYYMMDD',
 ];
 
-const formatDateTime = (date: Date | string | undefined, format: string = FORMAT_DATE): string => {
+const formatDateTime = (
+  date: Date | string | undefined,
+  format: string = DATE_FORMAT_DDMMYYYY,
+): string => {
   if (!date) return '---';
 
   let parsedDate;

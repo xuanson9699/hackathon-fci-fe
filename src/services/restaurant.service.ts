@@ -7,6 +7,7 @@ import {
   RestaurantDetailResponse,
   RestaurantItem,
   RestaurantResponse,
+  VideosUploadedResponse,
 } from '@/types';
 
 type ResultLoginService = {
@@ -14,6 +15,10 @@ type ResultLoginService = {
   getDetail: (id: string, pageOptions?: PayloadPageOptions) => Promise<RestaurantDetailResponse>;
   uploadVideo: (file: File, id: string) => Promise<any>;
   createRestaurant: (name: string) => Promise<RestaurantItem>;
+  getVideosUploaded: (
+    id: string,
+    pageOptions?: PayloadPageOptions,
+  ) => Promise<VideosUploadedResponse>;
 };
 
 const useRestaurantService = (): ResultLoginService => {
@@ -50,11 +55,22 @@ const useRestaurantService = (): ResultLoginService => {
     return httpClient.post<RestaurantItem>(AppConfig.RESTAURANT.CREATE_NEW(), formData);
   };
 
+  const getVideosUploaded = (id: string, pageOptions?: PayloadPageOptions) => {
+    let queryParams = '';
+    if (pageOptions) {
+      queryParams = queryString.stringify(pageOptions);
+    }
+    return httpClient.get<VideosUploadedResponse>(
+      AppConfig.RESTAURANT.GET_VIEDEOS_UPLOADED(id, queryParams),
+    );
+  };
+
   return {
     getAll,
     getDetail,
     uploadVideo,
     createRestaurant,
+    getVideosUploaded,
   };
 };
 

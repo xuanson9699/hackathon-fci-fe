@@ -8,11 +8,11 @@ import { GET_ALL_RESTAURANT_QUERY_KEY } from '@/components/constants';
 import useRestaurantService from '@/services/restaurant.service';
 
 import FilterBar from './components/FilterBar';
-import ClaimTable from './components/RestaurantTable';
+import RestaurantTable from './components/RestaurantTable';
 
 export type FilterConditionType = {
   page: number;
-  page_size: number;
+  per_page: number;
   search_term: string;
   start_time?: string;
   end_time?: string;
@@ -22,7 +22,7 @@ export type FilterConditionType = {
 
 const defaultFilter = {
   page: 1,
-  page_size: 10,
+  per_page: 10,
   search_term: '',
   order: undefined,
   sort_by: undefined,
@@ -59,7 +59,7 @@ const Restaurants = () => {
           setFilterCondition={setFilterCondition}
           defaultFilter={defaultFilter}
         />
-        <ClaimTable
+        <RestaurantTable
           loading={isLoading}
           data={data?.data}
           filterCondition={filterCondition}

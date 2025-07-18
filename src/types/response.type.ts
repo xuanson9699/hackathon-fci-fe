@@ -70,6 +70,24 @@ type RestaurantDetailResponse = {
   meta: ResponsePageOptions;
 };
 
+type Video = {
+  id: string;
+  camera_id: string;
+  filename: string;
+  recorded_date: string;
+  start_time: string;
+  end_time: string;
+  uploaded_at: string;
+  status: string;
+};
+
+type VideosUploadedResponse = {
+  restaurant_id: string;
+  name: string;
+  videos: Video[];
+  meta: ResponsePageOptions;
+};
+
 export type {
   LoginResponse,
   PaginationResponse,
@@ -81,4 +99,6 @@ export type {
   RestaurantVideo,
   RestaurantEventItem,
   RestaurantEvenSubItem,
+  VideosUploadedResponse,
+  Video,
 };

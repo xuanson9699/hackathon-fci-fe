@@ -1,5 +1,6 @@
 import { Image, Table, TableColumnsType, type TableProps } from 'antd';
 
+import { DATETIME_FORMAT_DDMMYYYY_HHMMSS } from '@/components/constants';
 import TableComponent from '@/components/ui/table-component';
 import { formatDateTime } from '@/components/utils/date';
 import { RestaurantDetailResponse, RestaurantEvenSubItem, RestaurantEventItem } from '@/types';
@@ -46,7 +47,7 @@ const CustomerTable: React.FC<CustomerTableProps> = (props) => {
       key: 'event_start',
       width: 80,
       render: (value: string) => {
-        return <>{formatDateTime(value)}</>;
+        return <>{formatDateTime(value, DATETIME_FORMAT_DDMMYYYY_HHMMSS)}</>;
       },
     },
     {
@@ -55,7 +56,7 @@ const CustomerTable: React.FC<CustomerTableProps> = (props) => {
       key: 'event_end',
       width: 80,
       render: (value: string) => {
-        return <>{formatDateTime(value)}</>;
+        return <>{formatDateTime(value, DATETIME_FORMAT_DDMMYYYY_HHMMSS)}</>;
       },
     },
   ];
@@ -86,7 +87,7 @@ const CustomerTable: React.FC<CustomerTableProps> = (props) => {
       key: 'event_start',
       width: 80,
       render: (value: string) => {
-        return <>{formatDateTime(value)}</>;
+        return <>{formatDateTime(value, DATETIME_FORMAT_DDMMYYYY_HHMMSS)}</>;
       },
     },
     {
@@ -95,7 +96,7 @@ const CustomerTable: React.FC<CustomerTableProps> = (props) => {
       key: 'event_end',
       width: 80,
       render: (value: string) => {
-        return <>{formatDateTime(value)}</>;
+        return <>{formatDateTime(value, DATETIME_FORMAT_DDMMYYYY_HHMMSS)}</>;
       },
     },
   ];

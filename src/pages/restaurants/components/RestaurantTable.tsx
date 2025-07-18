@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { Card, Col, Row } from 'antd';
+import { Card, Col, Row, Spin } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { styled } from 'styled-components';
 
@@ -44,7 +44,7 @@ const RestaurantTable: React.FC<RestaurantTableProps> = (props) => {
   };
 
   return (
-    <>
+    <Spin spinning={loading}>
       <Row gutter={[16, 16]}>
         {data?.map((item) => {
           return (
@@ -79,11 +79,13 @@ const RestaurantTable: React.FC<RestaurantTableProps> = (props) => {
           );
         })}
       </Row>
-      <PaginationControl
-        filterCondition={filterCondition}
-        setFilterCondition={setFilterCondition}
-        totalItem={totalItem}
-      />
+      {!loading && (
+        <PaginationControl
+          filterCondition={filterCondition}
+          setFilterCondition={setFilterCondition}
+          totalItem={totalItem}
+        />
+      )}
       {selectedDeleteId && (
         <ConfirmModal
           handleOk={handleDeleteItem}
@@ -93,7 +95,7 @@ const RestaurantTable: React.FC<RestaurantTableProps> = (props) => {
           <></>
         </ConfirmModal>
       )}
-    </>
+    </Spin>
   );
 };
 

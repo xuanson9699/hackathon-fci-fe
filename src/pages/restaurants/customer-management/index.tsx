@@ -1,7 +1,8 @@
 import { useState } from 'react';
 
+import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
-import { Breadcrumb } from 'antd';
+import { Breadcrumb, Tooltip } from 'antd';
 import queryString from 'query-string';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -11,11 +12,12 @@ import { UploadItem } from '@/types';
 
 import CustomerTable from './components/CustomerTable';
 import FilterCustomerBar from './components/FilterCustomerBar';
+import HistoryVideoUpload from './components/HistoryVideoUploaded';
 import UploadProgressDrawer from './components/UploadProgressBox';
 
 export type FilterConditionType = {
   page: number;
-  page_size: number;
+  per_page: number;
   person_external_id: string;
   start_time?: string;
   end_time?: string;
@@ -25,7 +27,7 @@ export type FilterConditionType = {
 
 const defaultFilter = {
   page: 1,
-  page_size: 10,
+  per_page: 10,
   person_external_id: '',
   start_time: undefined,
   end_time: undefined,
@@ -39,6 +41,7 @@ const CustommerManagement = () => {
 
   const [uploadQueue, setUploadQueue] = useState<UploadItem[]>([]);
   const [showUploadDrawer, setShowUploadDrawer] = useState(true);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const [filterCondition, setFilterCondition] = useState<FilterConditionType>({
     ...defaultFilter,
@@ -53,6 +56,10 @@ const CustommerManagement = () => {
     keepPreviousData: true,
     refetchInterval: 10000,
   });
+
+  const toggleCollapsed = () => {
+    setIsOpen(!isOpen);
+  };
 
   return (
     <>
@@ -72,7 +79,8 @@ const CustommerManagement = () => {
           ]}
         />
       </header>
-      <div className="p-20 py-5 bg-gray-100 h-full flex flex-col gap-4">
+
+      <div className="flex gap-4 p-20 py-5 bg-gray-100 h-full flex-col">
         <FilterCustomerBar
           filterCondition={filterCondition}
           setFilterCondition={setFilterCondition}
@@ -81,6 +89,16 @@ const CustommerManagement = () => {
           uploadQueue={uploadQueue}
           setShowUploadDrawer={setShowUploadDrawer}
         />
+        <div>
+          {!isOpen ? (
+            <Tooltip title="Show videos uploaded">
+              <MenuUnfoldOutlined onClick={toggleCollapsed} />
+            </Tooltip>
+          ) : (
+            <MenuFoldOutlined onClick={toggleCollapsed} />
+          )}
+        </div>
+
         <CustomerTable
           data={data}
           filterCondition={filterCondition}
@@ -91,6 +109,7 @@ const CustommerManagement = () => {
       {showUploadDrawer && (
         <UploadProgressDrawer queue={uploadQueue} onClose={() => setShowUploadDrawer(false)} />
       )}
+      {isOpen && <HistoryVideoUpload toggleCollapsed={toggleCollapsed} />}
     </>
   );
 };
