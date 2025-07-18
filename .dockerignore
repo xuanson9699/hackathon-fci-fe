@@ -1,0 +1,9 @@
+node_modules
+dist
+build
+.git
+.gitlab
+.gitlab-ci.yml
+Dockerfile*
+docker-compose.yml
+*.log
