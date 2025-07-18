@@ -8,7 +8,7 @@ import { GET_ALL_RESTAURANT_QUERY_KEY } from '@/components/constants';
 import useRestaurantService from '@/services/restaurant.service';
 
 import FilterBar from './components/FilterBar';
-import ClaimTable from './components/RestaurantTable';
+import RestaurantTable from './components/RestaurantTable';
 
 export type FilterConditionType = {
   page: number;
@@ -59,7 +59,7 @@ const Restaurants = () => {
           setFilterCondition={setFilterCondition}
           defaultFilter={defaultFilter}
         />
-        <ClaimTable
+        <RestaurantTable
           loading={isLoading}
           data={data?.data}
           filterCondition={filterCondition}

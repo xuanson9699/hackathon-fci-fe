@@ -40,7 +40,6 @@ const HistoryVideoUpload = ({ toggleCollapsed }: HistoryVideoUploadProps) => {
     queryKey: [GET_VIDEOS_UPLOADED_QUERY_KEY, id, filterCondition],
     queryFn: () => getVideosUploaded(id ?? '', filterCondition),
     keepPreviousData: true,
-    refetchInterval: 10000,
   });
 
   const handleShowStatusIcon = (status: string) => {
@@ -73,11 +72,13 @@ const HistoryVideoUpload = ({ toggleCollapsed }: HistoryVideoUploadProps) => {
               );
             })}
           </div>
-          <PaginationControl
-            filterCondition={filterCondition}
-            setFilterCondition={setFilterCondition}
-            totalItem={data?.meta?.total}
-          />
+          {!isLoading && (
+            <PaginationControl
+              filterCondition={filterCondition}
+              setFilterCondition={setFilterCondition}
+              totalItem={data?.meta?.total}
+            />
+          )}
         </div>
       </Spin>
     </Drawer>
