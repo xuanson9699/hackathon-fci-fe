@@ -93,15 +93,15 @@ const CustommerManagement = () => {
         <div>
           {!isOpen ? (
             <Tooltip title="Show videos uploaded">
-              <ButtonBase>
+              <ButtonBase onClick={toggleCollapsed}>
                 List Video
-                <MenuUnfoldOutlined onClick={toggleCollapsed} />
+                <MenuUnfoldOutlined />
               </ButtonBase>
             </Tooltip>
           ) : (
-            <ButtonBase>
+            <ButtonBase onClick={toggleCollapsed}>
               List Video
-              <MenuFoldOutlined onClick={toggleCollapsed} />
+              <MenuFoldOutlined />
             </ButtonBase>
           )}
         </div>
