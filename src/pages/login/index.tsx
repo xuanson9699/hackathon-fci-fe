@@ -63,7 +63,7 @@ const Login = (): JSX.Element => {
               render={({ field, fieldState }) => (
                 <FormFiled label="User name" error={fieldState?.error?.message} isRequire>
                   <Input
-                    className={clsx(fieldState.error && 'border-red-500', 'min-w-0 md:min-w-80')}
+                    className={clsx(fieldState.error && 'border-info_red', 'min-w-0 md:min-w-80')}
                     {...field}
                     value={field.value ?? ''}
                   />
@@ -86,7 +86,7 @@ const Login = (): JSX.Element => {
                 <FormFiled label={'Password'} isRequire error={fieldState?.error?.message}>
                   <Input.Password
                     className={clsx(
-                      fieldState.error && 'border-red-500',
+                      fieldState.error && 'border-info_red',
                       'min-w-0 md:min-w-[300px]',
                     )}
                     {...field}

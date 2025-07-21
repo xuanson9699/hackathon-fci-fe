@@ -4,19 +4,14 @@ interface FormFieldProps {
   isRequire?: boolean;
   error?: string;
 }
-const FormFiled = ({
-  label = "",
-  children,
-  isRequire,
-  error,
-}: FormFieldProps) => {
+const FormFiled = ({ label = '', children, isRequire, error }: FormFieldProps) => {
   return (
     <div className="flex flex-col gap-2">
       <span className="text-secondary text-sm">
-        {label} {isRequire ? <span className="text-red-500">*</span> : ""}
+        {label} {isRequire ? <span className="text-info_red">*</span> : ''}
       </span>
       {children}
-      {error && <span className="text-red-500 text-xs">{error}</span>}
+      {error && <span className="text-info_red text-xs">{error}</span>}
     </div>
   );
 };
