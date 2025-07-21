@@ -7,6 +7,7 @@ import queryString from 'query-string';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { GET_RESTAURANT_DETAIL_QUERY_KEY } from '@/components/constants';
+import ButtonBase from '@/components/ui/button-base';
 import useRestaurantService from '@/services/restaurant.service';
 import { UploadItem } from '@/types';
 
@@ -92,10 +93,16 @@ const CustommerManagement = () => {
         <div>
           {!isOpen ? (
             <Tooltip title="Show videos uploaded">
-              <MenuUnfoldOutlined onClick={toggleCollapsed} />
+              <ButtonBase onClick={toggleCollapsed}>
+                List Video
+                <MenuUnfoldOutlined />
+              </ButtonBase>
             </Tooltip>
           ) : (
-            <MenuFoldOutlined onClick={toggleCollapsed} />
+            <ButtonBase onClick={toggleCollapsed}>
+              List Video
+              <MenuFoldOutlined />
+            </ButtonBase>
           )}
         </div>
 

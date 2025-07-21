@@ -25,6 +25,7 @@ const App = (): JSX.Element => {
         theme={{
           token: {
             colorText: '#24292D',
+            colorPrimary: '#0076CB',
           },
         }}
       >

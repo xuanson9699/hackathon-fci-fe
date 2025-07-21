@@ -23,7 +23,7 @@ const UploadBox = ({ queue, onClose }: Props) => {
 
   return (
     <div className="fixed bottom-4 right-4 w-96 bg-white border shadow-lg rounded z-50 h-96">
-      <div className="flex justify-between items-center mb-2 bg-blue-500 p-3">
+      <div className="flex justify-between items-center mb-2 bg-brand p-3">
         <span className="font-semibold text-white">Upload file</span>
         <Button
           type="text"

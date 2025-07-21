@@ -124,7 +124,7 @@ const TableComponent = <T extends object>({
           const key = rowKey && record[rowKey as keyof T];
 
           return selectedRowKeys.includes(key as string)
-            ? `bg-blue-50 ${rowClassName(record)}`
+            ? `bg-brand ${rowClassName(record)}`
             : `${rowClassName(record)}`;
         }}
         className={`${styles.customTable} ${className}`}

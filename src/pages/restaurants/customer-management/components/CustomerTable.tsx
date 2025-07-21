@@ -1,4 +1,5 @@
 import { Image, Table, TableColumnsType, type TableProps } from 'antd';
+import { styled } from 'styled-components';
 
 import { DATETIME_FORMAT_DDMMYYYY_HHMMSS } from '@/components/constants';
 import TableComponent from '@/components/ui/table-component';
@@ -104,7 +105,7 @@ const CustomerTable: React.FC<CustomerTableProps> = (props) => {
   const expandedRowRender = (_: RestaurantEvenSubItem, index: number) => {
     const dataSubEvent = data?.events?.[index]?.sub_events;
     return (
-      <Table<RestaurantEvenSubItem>
+      <StyledExpandeTable<any>
         columns={expandColumns}
         dataSource={dataSubEvent}
         pagination={false}
@@ -131,3 +132,12 @@ const CustomerTable: React.FC<CustomerTableProps> = (props) => {
 };
 
 export default CustomerTable;
+
+const StyledExpandeTable = styled(Table)`
+  .ant-table-row {
+    background-color: #ecf1f5;
+  }
+  .ant-table-row:hover {
+    background-color: #ecf1f5 !important;
+  }
+`;
