@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { InfoCircleOutlined, SyncOutlined, CheckCircleOutlined } from '@ant-design/icons';
+import { CloseCircleOutlined, SyncOutlined, CheckCircleOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
 import { Drawer, TableColumnsType } from 'antd';
 import { useParams } from 'react-router-dom';
@@ -45,12 +45,27 @@ const HistoryVideoUpload = ({ toggleCollapsed }: HistoryVideoUploadProps) => {
 
   const handleShowStatusIcon = (status: string) => {
     if (status === StatusVideoUploadedEnum.FAILED) {
-      return <InfoCircleOutlined className="text-info_red" />;
+      return (
+        <div className="flex gap-2 text-info_red">
+          <CloseCircleOutlined />
+          Error
+        </div>
+      );
     }
     if (status === StatusVideoUploadedEnum.SUCCSESS) {
-      return <CheckCircleOutlined className="text-info_green" />;
+      return (
+        <div className="flex gap-2 text-info_green">
+          <CheckCircleOutlined />
+          Succsess
+        </div>
+      );
     }
-    return <SyncOutlined className="text-brand" />;
+    return (
+      <div className="flex gap-2 text-brand">
+        <SyncOutlined />
+        Processing
+      </div>
+    );
   };
 
   const columns: TableColumnsType<Video> = [
@@ -89,33 +104,6 @@ const HistoryVideoUpload = ({ toggleCollapsed }: HistoryVideoUploadProps) => {
         scrollY="70vh"
         size="small"
       />
-      {/* <Spin spinning={isLoading}>
-        <div className="flex flex-col gap-4">
-          <div>
-            {data?.videos?.map((item, index) => {
-              return (
-                <div
-                  key={index}
-                  className="p-2 b-bottom flex justify-between items-center cursor-pointer text-secondary"
-                >
-                  <VideoCameraOutlined />
-                  <div className="ml-2 max-w-[90%] overflow-hidden text-ellipsis whitespace-nowrap">
-                    {item.filename}
-                  </div>
-                  {handleShowStatusIcon(item.status)}
-                </div>
-              );
-            })}
-          </div>
-          {!isLoading && (
-            <PaginationControl
-              filterCondition={filterCondition}
-              setFilterCondition={setFilterCondition}
-              totalItem={data?.meta?.total}
-            />
-          )}
-        </div>
-      </Spin> */}
     </Drawer>
   );
 };
