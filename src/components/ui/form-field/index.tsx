@@ -7,7 +7,7 @@ interface FormFieldProps {
 const FormFiled = ({ label = '', children, isRequire, error }: FormFieldProps) => {
   return (
     <div className="flex flex-col gap-2">
-      <span className="text-secondary text-sm">
+      <span className="text-secondary text-sm h-5">
         {label} {isRequire ? <span className="text-info_red">*</span> : ''}
       </span>
       {children}

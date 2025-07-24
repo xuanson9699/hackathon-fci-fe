@@ -1,7 +1,7 @@
 const StatusVideoUploadedEnum = {
   FAILED: 'failed',
   PROCESSING: 'processing',
-  SUCCSESS: 'succsess',
+  SUCCESS: 'success',
 };
 
 export { StatusVideoUploadedEnum };

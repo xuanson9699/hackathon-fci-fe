@@ -71,7 +71,9 @@ const RestaurantTable: React.FC<RestaurantTableProps> = (props) => {
                     <Col span={8} className="text-secondary">
                       Latest Uploadded
                     </Col>
-                    <Col span={16}>{formatDateTime(item.latest_uploaded)}</Col>
+                    <Col span={16}>
+                      {formatDateTime({ date: item.latest_uploaded, keepUtc: true })}
+                    </Col>
                   </Row>
                 </div>
               </Card>

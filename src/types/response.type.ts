@@ -24,7 +24,7 @@ type ResponseData<T> = {
   statusCode: number;
 };
 
-type PayloadPageOptions = { [key: string]: number | string | undefined };
+type PayloadPageOptions = { [key: string]: number | string | undefined | null };
 
 type RestaurantItem = {
   restaurant_id: string;
@@ -54,6 +54,7 @@ type RestaurantEvenSubItem = {
   event_end: string;
   image_start: string;
   image_end: string;
+  duration_seconds: number;
 };
 
 type RestaurantEventItem = RestaurantEvenSubItem & {
@@ -66,7 +67,6 @@ type RestaurantDetailResponse = {
   created_by: string;
   created_at: string;
   events: RestaurantEventItem[];
-  videos: RestaurantVideo[];
   meta: ResponsePageOptions;
 };
 
