@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 
-import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
+import { MenuFoldOutlined, MenuUnfoldOutlined, UsergroupDeleteOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
 import { Breadcrumb, Tooltip } from 'antd';
+import { isEqual } from 'lodash-es';
 import queryString from 'query-string';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -54,7 +55,7 @@ const CustommerManagement = () => {
     ...queryString.parse(location.search),
   });
 
-  const filterRef = useRef(filterCondition);
+  const filterRef = useRef({});
 
   const { getDetail } = useRestaurantService();
 
@@ -67,7 +68,7 @@ const CustommerManagement = () => {
       if (!isSameDataSource(dataSource, data?.events)) {
         setDataSource(data?.events);
       }
-      if (JSON.stringify(filterRef.current) !== JSON.stringify(filterCondition)) {
+      if (!isEqual(filterRef.current, filterCondition)) {
         filterRef.current = filterCondition;
         setIsFilterLoading(false);
       }
@@ -75,7 +76,7 @@ const CustommerManagement = () => {
   });
 
   useEffect(() => {
-    if (JSON.stringify(filterRef.current) !== JSON.stringify(filterCondition)) {
+    if (!isEqual(filterRef.current, filterCondition)) {
       setIsFilterLoading(true);
     }
   }, [filterCondition]);
@@ -112,7 +113,12 @@ const CustommerManagement = () => {
           uploadQueue={uploadQueue}
           setShowUploadDrawer={setShowUploadDrawer}
         />
-        <div>
+        <div className="flex gap-2 items-center justify-between">
+          {/* <ButtonBase> */}
+          <div>
+            Customer total:{' '}
+            <span className="text-secondary font-semibold">{data?.meta?.total}</span>
+          </div>
           {!isOpen ? (
             <Tooltip title="Show videos uploaded">
               <ButtonBase onClick={toggleCollapsed}>
@@ -126,6 +132,7 @@ const CustommerManagement = () => {
               <MenuFoldOutlined />
             </ButtonBase>
           )}
+          {/* </ButtonBase> */}
         </div>
 
         <CustomerTable

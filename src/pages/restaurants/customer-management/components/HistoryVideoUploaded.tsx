@@ -52,7 +52,7 @@ const HistoryVideoUpload = ({ toggleCollapsed }: HistoryVideoUploadProps) => {
         </div>
       );
     }
-    if (status === StatusVideoUploadedEnum.SUCCSESS) {
+    if (status === StatusVideoUploadedEnum.SUCCESS) {
       return (
         <div className="flex gap-2 text-info_green rounded-full border border-info_green border-solid py-0.5 px-2 bg-green-100 w-fit">
           <CheckCircleOutlined />
