@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
@@ -9,12 +9,13 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { GET_RESTAURANT_DETAIL_QUERY_KEY } from '@/components/constants';
 import ButtonBase from '@/components/ui/button-base';
 import useRestaurantService from '@/services/restaurant.service';
-import { UploadItem } from '@/types';
+import { RestaurantEventItem, UploadItem } from '@/types';
 
 import CustomerTable from './components/CustomerTable';
 import FilterCustomerBar from './components/FilterCustomerBar';
 import HistoryVideoUpload from './components/HistoryVideoUploaded';
 import UploadProgressDrawer from './components/UploadProgressBox';
+import { isSameDataSource } from './helper';
 
 export type FilterConditionType = {
   page: number;
@@ -24,6 +25,7 @@ export type FilterConditionType = {
   end_time?: string;
   order?: string;
   sort_by?: string;
+  duration?: string | number | null;
 };
 
 const defaultFilter = {
@@ -34,6 +36,7 @@ const defaultFilter = {
   end_time: undefined,
   order: undefined,
   sort_by: undefined,
+  duration: 0,
 };
 
 const CustommerManagement = () => {
@@ -43,20 +46,39 @@ const CustommerManagement = () => {
   const [uploadQueue, setUploadQueue] = useState<UploadItem[]>([]);
   const [showUploadDrawer, setShowUploadDrawer] = useState(true);
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isFilterLoading, setIsFilterLoading] = useState(false);
+  const [dataSource, setDataSource] = useState<RestaurantEventItem[]>([]);
 
   const [filterCondition, setFilterCondition] = useState<FilterConditionType>({
     ...defaultFilter,
     ...queryString.parse(location.search),
   });
 
+  const filterRef = useRef(filterCondition);
+
   const { getDetail } = useRestaurantService();
 
-  const { data, isLoading } = useQuery({
+  const { data } = useQuery({
     queryKey: [GET_RESTAURANT_DETAIL_QUERY_KEY, id, filterCondition],
     queryFn: () => getDetail(id ?? '', filterCondition),
     keepPreviousData: true,
     refetchInterval: 10000,
+    onSuccess: (data) => {
+      if (!isSameDataSource(dataSource, data?.events)) {
+        setDataSource(data?.events);
+      }
+      if (JSON.stringify(filterRef.current) !== JSON.stringify(filterCondition)) {
+        filterRef.current = filterCondition;
+        setIsFilterLoading(false);
+      }
+    },
   });
+
+  useEffect(() => {
+    if (JSON.stringify(filterRef.current) !== JSON.stringify(filterCondition)) {
+      setIsFilterLoading(true);
+    }
+  }, [filterCondition]);
 
   const toggleCollapsed = () => {
     setIsOpen(!isOpen);
@@ -107,10 +129,11 @@ const CustommerManagement = () => {
         </div>
 
         <CustomerTable
-          data={data}
+          dataSource={dataSource}
           filterCondition={filterCondition}
           setFilterCondition={setFilterCondition}
-          loading={isLoading}
+          loading={isFilterLoading}
+          total={data?.meta?.total ?? 0}
         />
       </div>
       {showUploadDrawer && (

@@ -1,15 +1,16 @@
-import { Dispatch, SetStateAction, useEffect, useMemo, useRef } from 'react';
+import { Dispatch, SetStateAction, useEffect, useMemo, useRef, useState } from 'react';
 
 import { ReloadOutlined, SearchOutlined, UploadOutlined } from '@ant-design/icons';
 import { useMutation } from '@tanstack/react-query';
-import { Button, Input } from 'antd';
+import { Button, Input, InputNumber } from 'antd';
 import dayjs from 'dayjs';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, useForm, useWatch } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
 
 import { useDebouncedValue } from '@/components/hooks';
 import ButtonBase from '@/components/ui/button-base';
 import DateRangePicker from '@/components/ui/date-range-picker';
+import FormFiled from '@/components/ui/form-field';
 import { generateUUID } from '@/components/utils';
 import { convertLocalTimeForSearch } from '@/components/utils/date';
 import useRestaurantService from '@/services/restaurant.service';
@@ -40,7 +41,7 @@ const FilterCustomerBar = ({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { uploadVideo } = useRestaurantService();
 
-  const { control, watch, reset } = useForm<any>({
+  const { control, watch, reset, setValue } = useForm<any>({
     defaultValues: {
       person_external_id: filterCondition.person_external_id,
       dateRange:
@@ -53,10 +54,19 @@ const FilterCustomerBar = ({
   const person_external_id = useDebouncedValue(watch('person_external_id'));
   const dateRange = watch('dateRange');
 
+  const [duration, setDuration] = useState<any>(null);
+
   useEffect(() => {
     if (isResetting.current) return;
     let start_time = undefined;
     let end_time = undefined;
+
+    let durationUpdate = duration && +duration > 0 ? duration * 60 : 0;
+
+    if (!Number.isFinite(+duration)) {
+      setValue('duration', undefined);
+      durationUpdate = 0;
+    }
 
     if (dateRange && dateRange.length === 2) {
       start_time = convertLocalTimeForSearch(dateRange[0]);
@@ -67,19 +77,21 @@ const FilterCustomerBar = ({
       person_external_id,
       start_time,
       end_time,
+      duration: durationUpdate,
     };
 
     setFilterCondition((prevFilter: FilterConditionType) => ({
       ...prevFilter,
       ...condition,
     }));
-  }, [person_external_id, dateRange, setFilterCondition]);
+  }, [person_external_id, dateRange, duration]);
 
   const handleResetFilter = () => {
     isResetting.current = true;
     reset({
       person_external_id: defaultFilter.person_external_id,
       dateRange: null,
+      duration: null,
     });
 
     setTimeout(() => {
@@ -150,42 +162,59 @@ const FilterCustomerBar = ({
             name="person_external_id"
             control={control}
             render={({ field }) => (
-              <Input
-                {...field}
-                allowClear
-                placeholder={''}
-                prefix={<SearchOutlined className="text-gray-400" />}
-                onClear={() => setFilterCondition({ ...filterCondition, person_external_id: '' })}
-                className="w-full sm:w-88"
-              />
+              <FormFiled label="Customer id">
+                <Input
+                  {...field}
+                  allowClear
+                  placeholder={''}
+                  prefix={<SearchOutlined className="text-gray-400" />}
+                  onClear={() => setFilterCondition({ ...filterCondition, person_external_id: '' })}
+                  className="w-full sm:w-88"
+                />
+              </FormFiled>
             )}
           />
           <Controller
             name="dateRange"
             control={control}
             render={({ field: { ref: _ref, ...rest } }) => (
-              <DateRangePicker {...rest} className="w-full sm:w-96" allowClear showTime />
+              <FormFiled label="Start time - End time">
+                <DateRangePicker {...rest} className="w-full sm:w-96" allowClear showTime />
+              </FormFiled>
             )}
           />
-          <Button
-            icon={<ReloadOutlined className="text-xs" />}
-            type="default"
-            className="text-secondary"
-            onClick={handleResetFilter}
-          >
-            Clear
-          </Button>
+
+          <FormFiled label="Duration (minutes)">
+            <InputNumber
+              className="w-full sm:w-32"
+              value={duration}
+              onChange={(value) => setDuration(value)}
+            />
+          </FormFiled>
+
+          <FormFiled>
+            <Button
+              icon={<ReloadOutlined className="text-xs" />}
+              type="default"
+              className="text-secondary"
+              onClick={handleResetFilter}
+            >
+              Clear
+            </Button>
+          </FormFiled>
         </div>
-        <ButtonBase
-          icon={<UploadOutlined />}
-          type="primary"
-          className="text-secondary"
-          onClick={handleClickUpload}
-          disabled={checkIsDisableButton}
-          loading={checkIsDisableButton}
-        >
-          Upload Video
-        </ButtonBase>
+        <FormFiled>
+          <ButtonBase
+            icon={<UploadOutlined />}
+            type="primary"
+            className="text-secondary"
+            onClick={handleClickUpload}
+            disabled={checkIsDisableButton}
+            loading={checkIsDisableButton}
+          >
+            Upload Video
+          </ButtonBase>
+        </FormFiled>
       </div>
       <input
         ref={fileInputRef}

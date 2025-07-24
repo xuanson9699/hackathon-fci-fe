@@ -6,16 +6,25 @@ import TableComponent from '@/components/ui/table-component';
 import { formatDateTime } from '@/components/utils/date';
 import { RestaurantDetailResponse, RestaurantEvenSubItem, RestaurantEventItem } from '@/types';
 
+import { formatDuration } from '../helper';
+
 // Interface for table data
 interface CustomerTableProps<T = any> {
-  data?: RestaurantDetailResponse;
+  dataSource?: RestaurantEventItem[];
   loading?: boolean;
   filterCondition: T;
   setFilterCondition?: (condition: T) => void;
+  total: number;
 }
 
 const CustomerTable: React.FC<CustomerTableProps> = (props) => {
-  const { data, loading = false, filterCondition, setFilterCondition = () => {} } = props;
+  const {
+    dataSource,
+    loading = false,
+    filterCondition,
+    setFilterCondition = () => {},
+    total,
+  } = props;
 
   const columns: TableProps<RestaurantEventItem>['columns'] = [
     {
@@ -28,7 +37,7 @@ const CustomerTable: React.FC<CustomerTableProps> = (props) => {
       title: 'Start picture',
       dataIndex: 'image_start',
       key: 'image_start',
-      width: 120,
+      width: 100,
       render: (value: string) => {
         return <Image src={value} alt="" className="!w-20 object-cover" loading="lazy" />;
       },
@@ -37,7 +46,7 @@ const CustomerTable: React.FC<CustomerTableProps> = (props) => {
       title: 'End picture',
       dataIndex: 'image_end',
       key: 'image_end',
-      width: 120,
+      width: 100,
       render: (value: string) => {
         return <Image src={value} alt="" className="!w-20 object-cover" loading="lazy" />;
       },
@@ -74,6 +83,15 @@ const CustomerTable: React.FC<CustomerTableProps> = (props) => {
             })}
           </>
         );
+      },
+    },
+    {
+      title: 'Duration',
+      dataIndex: 'duration_seconds',
+      key: 'duration_seconds',
+      width: 120,
+      render: (value: number) => {
+        return <>{formatDuration(value)}</>;
       },
     },
   ];
@@ -135,7 +153,7 @@ const CustomerTable: React.FC<CustomerTableProps> = (props) => {
   ];
 
   const expandedRowRender = (_: RestaurantEvenSubItem, index: number) => {
-    const dataSubEvent = data?.events?.[index]?.sub_events;
+    const dataSubEvent = dataSource?.[index]?.sub_events;
     return (
       <StyledExpandeTable<any>
         columns={expandColumns}
@@ -149,15 +167,15 @@ const CustomerTable: React.FC<CustomerTableProps> = (props) => {
     <>
       <TableComponent
         columns={columns}
-        dataSource={data?.events}
+        dataSource={dataSource}
         filterCondition={filterCondition}
         setFilterCondition={setFilterCondition}
         loading={loading}
-        totalItem={data?.meta?.total}
+        totalItem={total}
         showPagination
         expandableConfig={{ expandedRowRender, defaultExpandedRowKeys: ['0'] }}
         rowKey="person_external_id"
-        scrollY="70vh"
+        scrollY="60vh"
       />
     </>
   );
