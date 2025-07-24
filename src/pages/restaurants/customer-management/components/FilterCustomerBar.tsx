@@ -11,7 +11,7 @@ import { useDebouncedValue } from '@/components/hooks';
 import ButtonBase from '@/components/ui/button-base';
 import DateRangePicker from '@/components/ui/date-range-picker';
 import { generateUUID } from '@/components/utils';
-import { convertLocalToUTC } from '@/components/utils/date';
+import { convertLocalTimeForSearch } from '@/components/utils/date';
 import useRestaurantService from '@/services/restaurant.service';
 import { UploadItem, UploadStatus } from '@/types';
 
@@ -59,8 +59,8 @@ const FilterCustomerBar = ({
     let end_time = undefined;
 
     if (dateRange && dateRange.length === 2) {
-      start_time = convertLocalToUTC(dateRange[0]);
-      end_time = convertLocalToUTC(dateRange[1]);
+      start_time = convertLocalTimeForSearch(dateRange[0]);
+      end_time = convertLocalTimeForSearch(dateRange[1]);
     }
 
     const condition = {

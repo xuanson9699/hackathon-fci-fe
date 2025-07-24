@@ -48,7 +48,15 @@ const CustomerTable: React.FC<CustomerTableProps> = (props) => {
       key: 'event_start',
       width: 80,
       render: (value: string) => {
-        return <>{formatDateTime(value, DATETIME_FORMAT_DDMMYYYY_HHMMSS)}</>;
+        return (
+          <>
+            {formatDateTime({
+              date: value,
+              format: DATETIME_FORMAT_DDMMYYYY_HHMMSS,
+              keepUtc: true,
+            })}
+          </>
+        );
       },
     },
     {
@@ -57,7 +65,15 @@ const CustomerTable: React.FC<CustomerTableProps> = (props) => {
       key: 'event_end',
       width: 80,
       render: (value: string) => {
-        return <>{formatDateTime(value, DATETIME_FORMAT_DDMMYYYY_HHMMSS)}</>;
+        return (
+          <>
+            {formatDateTime({
+              date: value,
+              format: DATETIME_FORMAT_DDMMYYYY_HHMMSS,
+              keepUtc: true,
+            })}
+          </>
+        );
       },
     },
   ];
@@ -88,7 +104,15 @@ const CustomerTable: React.FC<CustomerTableProps> = (props) => {
       key: 'event_start',
       width: 80,
       render: (value: string) => {
-        return <>{formatDateTime(value, DATETIME_FORMAT_DDMMYYYY_HHMMSS)}</>;
+        return (
+          <>
+            {formatDateTime({
+              date: value,
+              format: DATETIME_FORMAT_DDMMYYYY_HHMMSS,
+              keepUtc: true,
+            })}
+          </>
+        );
       },
     },
     {
@@ -97,7 +121,15 @@ const CustomerTable: React.FC<CustomerTableProps> = (props) => {
       key: 'event_end',
       width: 80,
       render: (value: string) => {
-        return <>{formatDateTime(value, DATETIME_FORMAT_DDMMYYYY_HHMMSS)}</>;
+        return (
+          <>
+            {formatDateTime({
+              date: value,
+              format: DATETIME_FORMAT_DDMMYYYY_HHMMSS,
+              keepUtc: true,
+            })}
+          </>
+        );
       },
     },
   ];

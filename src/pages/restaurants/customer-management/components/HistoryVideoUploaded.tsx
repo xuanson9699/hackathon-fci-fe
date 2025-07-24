@@ -46,7 +46,7 @@ const HistoryVideoUpload = ({ toggleCollapsed }: HistoryVideoUploadProps) => {
   const handleShowStatusIcon = (status: string) => {
     if (status === StatusVideoUploadedEnum.FAILED) {
       return (
-        <div className="flex gap-2 text-info_red">
+        <div className="flex gap-2 text-info_red rounded-full border border-info_red border-solid py-0.5 px-2 bg-red-100 w-fit">
           <CloseCircleOutlined />
           Error
         </div>
@@ -54,14 +54,14 @@ const HistoryVideoUpload = ({ toggleCollapsed }: HistoryVideoUploadProps) => {
     }
     if (status === StatusVideoUploadedEnum.SUCCSESS) {
       return (
-        <div className="flex gap-2 text-info_green">
+        <div className="flex gap-2 text-info_green rounded-full border border-info_green border-solid py-0.5 px-2 bg-green-100 w-fit">
           <CheckCircleOutlined />
           Succsess
         </div>
       );
     }
     return (
-      <div className="flex gap-2 text-brand">
+      <div className="flex gap-2 text-brand rounded-full border border-brand border-solid py-0.5 px-2 bg-blue-100 w-fit">
         <SyncOutlined />
         Processing
       </div>
@@ -77,7 +77,15 @@ const HistoryVideoUpload = ({ toggleCollapsed }: HistoryVideoUploadProps) => {
       key: 'uploaded_at',
       width: 160,
       render: (value: string) => {
-        return <>{formatDateTime(value, DATETIME_FORMAT_DDMMYYYY_HHMMSS)}</>;
+        return (
+          <>
+            {formatDateTime({
+              date: value,
+              format: DATETIME_FORMAT_DDMMYYYY_HHMMSS,
+              keepUtc: true,
+            })}
+          </>
+        );
       },
     },
     {
@@ -92,7 +100,7 @@ const HistoryVideoUpload = ({ toggleCollapsed }: HistoryVideoUploadProps) => {
   ];
 
   return (
-    <Drawer open onClose={toggleCollapsed} width={'50%'} title="Uploaded File">
+    <Drawer open onClose={toggleCollapsed} width={'60%'} title="Uploaded File">
       <TableComponent
         columns={columns}
         dataSource={data?.videos}

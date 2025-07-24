@@ -1,9 +1,17 @@
 import dayjs, { extend } from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
+import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
 dayjs.extend(utc);
+dayjs.extend(timezone);
 
 import { DATE_FORMAT_DDMMYYYY } from '../constants';
+
+interface FormatDateTimeParams {
+  date: Date | string | undefined;
+  format?: string;
+  keepUtc?: boolean;
+}
 
 extend(customParseFormat);
 
@@ -16,19 +24,20 @@ const SUPPORTED_FORMATS = [
   'YYYYMMDD',
 ];
 
-const formatDateTime = (
-  date: Date | string | undefined,
-  format: string = DATE_FORMAT_DDMMYYYY,
-): string => {
+const formatDateTime = ({
+  date,
+  format = DATE_FORMAT_DDMMYYYY,
+  keepUtc = true,
+}: FormatDateTimeParams): string => {
   if (!date) return '---';
 
   let parsedDate;
 
   if (date instanceof Date || dayjs(date).isValid()) {
-    parsedDate = dayjs(date);
+    parsedDate = keepUtc ? dayjs.utc(date) : dayjs(date);
   } else if (typeof date === 'string') {
     for (const fmt of SUPPORTED_FORMATS) {
-      const candidate = dayjs(date, fmt, true);
+      const candidate = keepUtc ? dayjs.utc(date, fmt, true) : dayjs(date, fmt, true);
       if (candidate.isValid()) {
         parsedDate = candidate;
         break;
@@ -40,7 +49,12 @@ const formatDateTime = (
 };
 
 const convertLocalToUTC = (localDate: string | Date): string => {
-  return dayjs(localDate).utc().format(); // ISO 8601 string ở UTC+0
+  return dayjs(localDate).utc().format();
 };
 
-export { formatDateTime, convertLocalToUTC };
+const convertLocalTimeForSearch = (localDate: string | Date): string => {
+  const parsed = dayjs(localDate);
+  return dayjs.utc(parsed.format('YYYY-MM-DDTHH:mm:ss')).format();
+};
+
+export { formatDateTime, convertLocalToUTC, convertLocalTimeForSearch };
