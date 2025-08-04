@@ -5,6 +5,7 @@ import { Breadcrumb } from 'antd';
 import queryString from 'query-string';
 
 import { GET_ALL_RESTAURANT_QUERY_KEY } from '@/components/constants';
+import centerDatas from '@/components/mockData.ts/centerData';
 import useRestaurantService from '@/services/restaurant.service';
 
 import FilterBar from './components/FilterBar';
@@ -28,18 +29,10 @@ const defaultFilter = {
   sort_by: undefined,
 };
 
-const Restaurants = () => {
+const Centers = () => {
   const [filterCondition, setFilterCondition] = useState<FilterConditionType>({
     ...defaultFilter,
     ...queryString.parse(location.search),
-  });
-
-  const { getAll } = useRestaurantService();
-
-  const { data, isLoading } = useQuery({
-    queryKey: [GET_ALL_RESTAURANT_QUERY_KEY, filterCondition],
-    queryFn: () => getAll(filterCondition),
-    keepPreviousData: true,
   });
 
   return (
@@ -60,15 +53,14 @@ const Restaurants = () => {
           defaultFilter={defaultFilter}
         />
         <RestaurantTable
-          loading={isLoading}
-          data={data?.data}
+          data={centerDatas}
           filterCondition={filterCondition}
           setFilterCondition={setFilterCondition}
-          totalItem={data?.meta?.total ?? 0}
+          totalItem={10}
         />
       </div>
     </>
   );
 };
 
-export default Restaurants;
+export default Centers;

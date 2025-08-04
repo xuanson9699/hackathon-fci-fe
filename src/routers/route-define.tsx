@@ -6,9 +6,8 @@ import MainLayout from '@/components/layouts/MainLayout';
 import { RouteExtends } from '@/types';
 
 // Lazy load components
-const RestaurantsModule = lazy(() => import('@/pages/restaurants'));
-const CustomerManagementModule = lazy(() => import('@/pages/restaurants/customer-management'));
-const LoginModule = lazy(() => import('@/pages/login'));
+const CentersModule = lazy(() => import('@/pages/centers'));
+const ProjectManagementModule = lazy(() => import('@/pages/centers/project-management'));
 
 const routes: RouteExtends[] = [
   {
@@ -17,28 +16,28 @@ const routes: RouteExtends[] = [
     children: [
       {
         index: true,
-        element: <Navigate to="restaurant" replace />,
+        element: <Navigate to="center" replace />,
       },
       {
-        path: 'restaurant',
+        path: 'center',
         element: <Outlet />,
         children: [
           {
             index: true,
-            element: <RestaurantsModule />,
+            element: <CentersModule />,
           },
           {
             path: ':id',
-            element: <CustomerManagementModule />,
+            element: <ProjectManagementModule />,
           },
         ],
       },
     ],
   },
-  {
-    path: 'login',
-    element: <LoginModule />,
-  },
+  // {
+  //   path: 'login',
+  //   element: <LoginModule />,
+  // },
 ];
 
 export default routes;
