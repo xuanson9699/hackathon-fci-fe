@@ -9,6 +9,7 @@ import {
   QuestionCircleOutlined,
   ShopOutlined,
   UserOutlined,
+  UsergroupAddOutlined,
 } from '@ant-design/icons';
 import { Avatar, Badge, Divider, Dropdown, Menu } from 'antd';
 import { clsx } from 'clsx';
@@ -32,7 +33,12 @@ const SidebarMenu: React.FC = () => {
     {
       key: '/restaurant',
       icon: <ShopOutlined />,
-      label: 'Restaurants',
+      label: 'Centers',
+    },
+    {
+      key: '/user',
+      icon: <UsergroupAddOutlined />,
+      label: 'Users',
     },
   ];
 

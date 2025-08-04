@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 
-import { MenuFoldOutlined, MenuUnfoldOutlined, UsergroupDeleteOutlined } from '@ant-design/icons';
+import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
 import { Breadcrumb, Tooltip } from 'antd';
 import { isEqual } from 'lodash-es';

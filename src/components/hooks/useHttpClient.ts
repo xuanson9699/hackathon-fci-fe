@@ -60,7 +60,7 @@ const useHttpClient = (): ResultHttpClient => {
   const handleError = async (error: any) => {
     const originalRequest = error.config;
     if (error?.response?.status === 401 && !originalRequest._retry) {
-      logOut();
+      // logOut();
       return;
       // originalRequest._retry = true;
       // if (!isRefreshing) {

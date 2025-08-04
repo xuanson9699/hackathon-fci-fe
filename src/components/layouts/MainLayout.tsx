@@ -10,11 +10,11 @@ const MainLayout = (): JSX.Element => {
   const navigate = useNavigate();
   const access_token = localStorage.getItem(ACCESS_TOKEN_KEY);
 
-  useEffect(() => {
-    if (!access_token) {
-      navigate('/login');
-    }
-  }, [navigate, access_token]);
+  // useEffect(() => {
+  //   if (!access_token) {
+  //     navigate('/login');
+  //   }
+  // }, [navigate, access_token]);
 
   return (
     <div className="z-10 fixed inset-0 h-full w-full flex">
