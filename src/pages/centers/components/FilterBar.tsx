@@ -1,10 +1,13 @@
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 
 import { PlusOutlined } from '@ant-design/icons';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 
+import { GET_ALL_CENTER_QUERY_KEY } from '@/components/constants';
 import { useDebouncedValue } from '@/components/hooks';
 import ButtonBase from '@/components/ui/button-base';
+import useCenterService from '@/services/center.service';
 
 import { FilterConditionType } from '..';
 import DrawerAddNew from './DrawerAddNew';
@@ -15,74 +18,33 @@ interface FilterBarProps {
   defaultFilter: FilterConditionType;
 }
 
-const FilterBar = ({ filterCondition, setFilterCondition, defaultFilter }: FilterBarProps) => {
+const FilterBar = () => {
   const isResetting = useRef(false);
   const [openDrawerAdd, setOpenDrawerAdd] = useState<boolean>(false);
 
-  const { control, watch, reset } = useForm<any>({
-    defaultValues: {
-      search_term: filterCondition.search_term,
+  const queryClient = useQueryClient();
+
+  const { createCenters } = useCenterService();
+
+  const createRestaurantMutation = useMutation({
+    mutationFn: () => createCenters(),
+    onSuccess: () => {
+      // onClose();
+      queryClient.invalidateQueries({
+        queryKey: [GET_ALL_CENTER_QUERY_KEY],
+      });
     },
   });
 
-  const search_term = useDebouncedValue(watch('search_term'));
-
-  useEffect(() => {
-    if (isResetting.current) return;
-
-    const condition = {
-      search_term,
-    };
-
-    setFilterCondition((prevFilter: FilterConditionType) => ({
-      ...prevFilter,
-      ...condition,
-    }));
-  }, [search_term, setFilterCondition]);
-
-  const handleResetFilter = () => {
-    isResetting.current = true;
-    reset({
-      search_term: defaultFilter.search_term,
-    });
-
-    setTimeout(() => {
-      isResetting.current = false;
-      setFilterCondition({
-        ...defaultFilter,
-      });
-    }, 0);
+  const onClick = () => {
+    createRestaurantMutation.mutate();
   };
 
   return (
     <>
       <div className="flex items-conter justify-between">
-        <span />
-        {/* <div className="flex gap-4">
-          <Controller
-            name="search_term"
-            control={control}
-            render={({ field }) => (
-              <Input
-                {...field}
-                allowClear
-                placeholder={''}
-                prefix={<SearchOutlined className="text-gray-400" />}
-                onClear={() => setFilterCondition({ ...filterCondition, search_term: '' })}
-                className="w-full sm:w-88"
-              />
-            )}
-          />
-
-          <Button
-            icon={<ReloadOutlined className="text-xs" />}
-            type="default"
-            className="text-secondary"
-            onClick={handleResetFilter}
-          >
-            Clear
-          </Button>
-        </div> */}
+        <ButtonBase onClick={onClick}>Create</ButtonBase>
+        {/* <span />
         <ButtonBase
           icon={<PlusOutlined className="text-xs text-white" />}
           type="primary"
@@ -90,7 +52,7 @@ const FilterBar = ({ filterCondition, setFilterCondition, defaultFilter }: Filte
           onClick={() => setOpenDrawerAdd(true)}
         >
           Add new restaurant
-        </ButtonBase>
+        </ButtonBase> */}
       </div>
       {openDrawerAdd && <DrawerAddNew onClose={() => setOpenDrawerAdd(false)} />}
     </>

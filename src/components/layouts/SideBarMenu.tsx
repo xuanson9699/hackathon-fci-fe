@@ -31,14 +31,14 @@ const SidebarMenu: React.FC = () => {
 
   const items: MenuItem[] = [
     {
-      key: '/restaurant',
+      key: '/center',
       icon: <ShopOutlined />,
       label: 'Centers',
     },
     {
-      key: '/user',
+      key: '/member',
       icon: <UsergroupAddOutlined />,
-      label: 'Users',
+      label: 'Members',
     },
   ];
 

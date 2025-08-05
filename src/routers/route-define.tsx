@@ -3,11 +3,10 @@ import { lazy } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 
 import MainLayout from '@/components/layouts/MainLayout';
+import Centers from '@/pages/centers';
+import ProjectManagement from '@/pages/centers/project-management';
+import MemberManagement from '@/pages/members';
 import { RouteExtends } from '@/types';
-
-// Lazy load components
-const CentersModule = lazy(() => import('@/pages/centers'));
-const ProjectManagementModule = lazy(() => import('@/pages/centers/project-management'));
 
 const routes: RouteExtends[] = [
   {
@@ -24,20 +23,26 @@ const routes: RouteExtends[] = [
         children: [
           {
             index: true,
-            element: <CentersModule />,
+            element: <Centers />,
           },
           {
             path: ':id',
-            element: <ProjectManagementModule />,
+            element: <ProjectManagement />,
+          },
+        ],
+      },
+      {
+        path: 'member',
+        element: <Outlet />,
+        children: [
+          {
+            index: true,
+            element: <MemberManagement />,
           },
         ],
       },
     ],
   },
-  // {
-  //   path: 'login',
-  //   element: <LoginModule />,
-  // },
 ];
 
 export default routes;

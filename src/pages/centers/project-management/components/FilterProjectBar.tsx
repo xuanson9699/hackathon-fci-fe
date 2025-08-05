@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction, useEffect, useMemo, useRef, useState } from 'react';
 
-import { ReloadOutlined, SearchOutlined, UploadOutlined } from '@ant-design/icons';
+import { PlusOutlined, SearchOutlined, UploadOutlined } from '@ant-design/icons';
 import { useMutation } from '@tanstack/react-query';
 import { Button, Input, InputNumber } from 'antd';
 import dayjs from 'dayjs';
@@ -13,11 +13,12 @@ import DateRangePicker from '@/components/ui/date-range-picker';
 import FormFiled from '@/components/ui/form-field';
 import { generateUUID } from '@/components/utils';
 import { convertLocalTimeForSearch } from '@/components/utils/date';
-import useRestaurantService from '@/services/restaurant.service';
+import useCenterService from '@/services/center.service';
 import { UploadItem, UploadStatus } from '@/types';
 
 import { FilterConditionType } from '..';
 import { simulateProgressRead } from '../helper';
+import DrawerAddNewPrject from './DrawerAddNew';
 
 interface FilterCustomerBarProps {
   filterCondition: FilterConditionType;
@@ -25,7 +26,6 @@ interface FilterCustomerBarProps {
   defaultFilter: FilterConditionType;
   setUploadQueue: React.Dispatch<React.SetStateAction<UploadItem[]>>;
   uploadQueue: UploadItem[];
-  setShowUploadDrawer: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const FilterCustomerBar = ({
@@ -34,12 +34,11 @@ const FilterCustomerBar = ({
   defaultFilter,
   setUploadQueue,
   uploadQueue,
-  setShowUploadDrawer = () => {},
 }: FilterCustomerBarProps) => {
   const { id } = useParams<{ id: string }>();
   const isResetting = useRef(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const { uploadVideo } = useRestaurantService();
+  const [isShowDrawer, setIsShowDrawer] = useState<boolean>(false);
+  const { uploadVideo } = useCenterService();
 
   const { control, watch, reset, setValue } = useForm<any>({
     defaultValues: {
@@ -106,52 +105,13 @@ const FilterCustomerBar = ({
     mutationFn: (file: File) => uploadVideo(file, id ?? ''),
   });
 
-  const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setShowUploadDrawer(true);
-    const files = Array.from(e.target.files || []);
-    const uploads = files.map((file) => ({
-      id: generateUUID(),
-      file,
-      progress: 0,
-      status: 'reading' as UploadStatus,
-    }));
-
-    setUploadQueue((prev) => [...prev, ...uploads]);
-
-    uploads.forEach((item) => {
-      simulateProgressRead(
-        item.file,
-        (percent) => {
-          setUploadQueue((prev) =>
-            prev.map((u) => (u.id === item.id ? { ...u, progress: percent } : u)),
-          );
-        },
-        () => {
-          setUploadQueue((prev) =>
-            prev.map((u) => (u.id === item.id ? { ...u, status: 'done' } : u)),
-          );
-          updateClaimMutation.mutate(item.file);
-        },
-        () => {
-          setUploadQueue((prev) =>
-            prev.map((u) => (u.id === item.id ? { ...u, status: 'error' } : u)),
-          );
-        },
-      );
-    });
-  };
-
   const checkIsDisableButton = useMemo(() => {
     const isDisable = uploadQueue?.some((item) => item.status === 'reading');
     return isDisable;
   }, [uploadQueue]);
 
-  const handleClickUpload = () => {
-    setUploadQueue([]);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-      fileInputRef.current.click();
-    }
+  const handleClickButtonAddNew = () => {
+    setIsShowDrawer(true);
   };
 
   return (
@@ -162,7 +122,7 @@ const FilterCustomerBar = ({
             name="person_external_id"
             control={control}
             render={({ field }) => (
-              <FormFiled label="Customer id">
+              <FormFiled label="Project name">
                 <Input
                   {...field}
                   allowClear
@@ -174,56 +134,22 @@ const FilterCustomerBar = ({
               </FormFiled>
             )}
           />
-          <Controller
-            name="dateRange"
-            control={control}
-            render={({ field: { ref: _ref, ...rest } }) => (
-              <FormFiled label="Start time - End time">
-                <DateRangePicker {...rest} className="w-full sm:w-96" allowClear showTime />
-              </FormFiled>
-            )}
-          />
-
-          <FormFiled label="Duration (minutes)">
-            <InputNumber
-              className="w-full sm:w-32"
-              value={duration}
-              onChange={(value) => setDuration(value)}
-            />
-          </FormFiled>
-
-          <FormFiled>
-            <Button
-              icon={<ReloadOutlined className="text-xs" />}
-              type="default"
-              className="text-secondary"
-              onClick={handleResetFilter}
-            >
-              Clear
-            </Button>
-          </FormFiled>
         </div>
         <FormFiled>
           <ButtonBase
-            icon={<UploadOutlined />}
+            icon={<PlusOutlined />}
             type="primary"
             className="text-secondary"
-            onClick={handleClickUpload}
+            onClick={handleClickButtonAddNew}
             disabled={checkIsDisableButton}
             loading={checkIsDisableButton}
           >
-            Upload Video
+            Create new project
           </ButtonBase>
         </FormFiled>
       </div>
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept="video/*"
-        multiple
-        hidden
-        onChange={handleUpload}
-      />
+
+      {isShowDrawer && <DrawerAddNewPrject onClose={() => setIsShowDrawer(false)} id={id} />}
     </>
   );
 };
