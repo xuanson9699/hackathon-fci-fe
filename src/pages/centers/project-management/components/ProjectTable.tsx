@@ -1,15 +1,9 @@
-import { useState } from 'react';
-
-import { Image, Table, TableColumnsType, type TableProps } from 'antd';
-import { styled } from 'styled-components';
+import { type TableProps } from 'antd';
 
 import { DATE_FORMAT_DDMMYYYY } from '@/components/constants';
 import TableComponent from '@/components/ui/table-component';
 import { formatDateTime } from '@/components/utils/date';
-import { RestaurantDetailResponse, RestaurantEvenSubItem, RestaurantEventItem } from '@/types';
-
-import { formatDuration } from '../helper';
-import DrawerAddNewPrject from './DrawerAddNew';
+import { RestaurantEventItem } from '@/types';
 
 // Interface for table data
 interface ProjectTableProps<T = any> {

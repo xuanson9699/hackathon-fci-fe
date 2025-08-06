@@ -51,7 +51,7 @@ const FilterBar = () => {
           className="text-secondary"
           onClick={() => setOpenDrawerAdd(true)}
         >
-          Add new restaurant
+          Add new project
         </ButtonBase> */}
       </div>
       {openDrawerAdd && <DrawerAddNew onClose={() => setOpenDrawerAdd(false)} />}

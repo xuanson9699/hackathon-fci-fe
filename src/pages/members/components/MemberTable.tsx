@@ -31,39 +31,25 @@ const MemberTable: React.FC<MemberTableProps> = (props) => {
       width: 120,
     },
     {
-      title: 'Project name',
+      title: 'User name',
       dataIndex: 'name',
       key: 'name',
       width: 120,
     },
     {
-      title: 'Description',
-      dataIndex: 'description',
-      key: 'description',
+      title: 'Account',
+      dataIndex: 'account',
+      key: 'account',
       width: 200,
     },
     {
-      title: 'Start date',
-      dataIndex: 'start_date',
-      key: 'start_date',
-      width: 80,
-      render: (value: string) => {
-        return (
-          <>
-            {formatDateTime({
-              date: value,
-              format: DATE_FORMAT_DDMMYYYY,
-              keepUtc: true,
-            })}
-          </>
-        );
-      },
-    },
-    {
-      title: 'Members number',
-      dataIndex: 'member_count',
-      key: 'member_count',
+      title: 'Project joined',
+      dataIndex: 'project_joined',
+      key: 'project_joined',
       width: 120,
+      render: (value: string[]) => {
+        return <>{value.join(', ')}</>;
+      },
     },
   ];
 

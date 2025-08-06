@@ -7,7 +7,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import { GET_CENTER_DETAIL_QUERY_KEY } from '@/components/constants';
 import useCenterService from '@/services/center.service';
-import { RestaurantEventItem, UploadItem } from '@/types';
 
 import FilterProjectBar from './components/FilterProjectBar';
 import ProjectTable from './components/ProjectTable';
@@ -15,34 +14,18 @@ import ProjectTable from './components/ProjectTable';
 export type FilterConditionType = {
   page: number;
   per_page: number;
-  person_external_id: string;
-  start_time?: string;
-  end_time?: string;
-  order?: string;
-  sort_by?: string;
-  duration?: string | number | null;
+  project_name: string;
 };
 
 const defaultFilter = {
   page: 1,
   per_page: 10,
-  person_external_id: '',
-  start_time: undefined,
-  end_time: undefined,
-  order: undefined,
-  sort_by: undefined,
-  duration: 0,
+  project_name: '',
 };
 
 const ProjectManagement = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
-
-  const [uploadQueue, setUploadQueue] = useState<UploadItem[]>([]);
-  const [showUploadDrawer, setShowUploadDrawer] = useState(true);
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [isFilterLoading, setIsFilterLoading] = useState(false);
-  const [dataSource, setDataSource] = useState<RestaurantEventItem[]>([]);
 
   const [filterCondition, setFilterCondition] = useState<FilterConditionType>({
     ...defaultFilter,
@@ -56,8 +39,6 @@ const ProjectManagement = () => {
     queryFn: () => getDetail(id ?? '', filterCondition),
     keepPreviousData: true,
   });
-
-  console.log('data', data);
 
   return (
     <>
@@ -83,8 +64,6 @@ const ProjectManagement = () => {
           filterCondition={filterCondition}
           setFilterCondition={setFilterCondition}
           defaultFilter={defaultFilter}
-          setUploadQueue={setUploadQueue}
-          uploadQueue={uploadQueue}
         />
 
         <ProjectTable

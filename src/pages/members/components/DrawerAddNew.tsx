@@ -4,7 +4,11 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Button, Col, Drawer, Input, Row, Select } from 'antd';
 import { Controller, useForm } from 'react-hook-form';
 
-import { GET_ALL_CENTER_QUERY_KEY, GET_CENTER_DETAIL_QUERY_KEY } from '@/components/constants';
+import {
+  GET_ALL_CENTER_QUERY_KEY,
+  GET_CENTER_DETAIL_QUERY_KEY,
+  GET_USER_LIST_QUERY_KEY,
+} from '@/components/constants';
 import FormFiled from '@/components/ui/form-field';
 import useCenterService from '@/services/center.service';
 
@@ -43,14 +47,14 @@ const DrawerAddNewMember = ({ onClose, id }: DrawerAddNewMemberProps) => {
 
   const queryClient = useQueryClient();
 
-  const { createProject, getAll, getDetail } = useCenterService();
+  const { createNewMember, getAll, getDetail } = useCenterService();
 
-  const createProjectMutation = useMutation<FormValues>({
-    mutationFn: (payload) => createProject(id, payload),
+  const createMemberMutation = useMutation<FormValues>({
+    mutationFn: (payload) => createNewMember(payload),
     onSuccess: () => {
       onClose();
       queryClient.invalidateQueries({
-        queryKey: [GET_CENTER_DETAIL_QUERY_KEY],
+        queryKey: [GET_USER_LIST_QUERY_KEY],
       });
     },
   });
@@ -62,7 +66,7 @@ const DrawerAddNewMember = ({ onClose, id }: DrawerAddNewMemberProps) => {
   });
 
   const { data: dataProject, isFetching: isFetchingProject } = useQuery({
-    queryKey: [GET_CENTER_DETAIL_QUERY_KEY, {}],
+    queryKey: [GET_CENTER_DETAIL_QUERY_KEY, {}, center_id],
     queryFn: () => getDetail(center_id, {}),
     keepPreviousData: true,
     enabled: !!center_id,
@@ -78,7 +82,7 @@ const DrawerAddNewMember = ({ onClose, id }: DrawerAddNewMemberProps) => {
   console.log('data', data);
 
   const onSubmit = (data: FormValues) => {
-    createProjectMutation.mutate({
+    createMemberMutation.mutate({
       name: data.name,
       email: data.email,
       center_id: data.center_id,
@@ -87,7 +91,7 @@ const DrawerAddNewMember = ({ onClose, id }: DrawerAddNewMemberProps) => {
   };
 
   return (
-    <Drawer open onClose={onClose} width={'35%'} title="Add new restaurant">
+    <Drawer open onClose={onClose} width={'35%'} title="Add new member">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 w-full">
         <Row gutter={[16, 16]}>
           <Col span={24}>
@@ -144,6 +148,7 @@ const DrawerAddNewMember = ({ onClose, id }: DrawerAddNewMemberProps) => {
                       label: project.name,
                       value: project.id,
                     }))}
+                    mode="tags"
                   />
                 </FormFiled>
               )}

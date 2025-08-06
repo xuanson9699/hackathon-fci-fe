@@ -48,7 +48,7 @@ const DrawerAddNewPrject = ({ onClose, id }: DrawerAddNewPrjectProps) => {
   };
 
   return (
-    <Drawer open onClose={onClose} width={'35%'} title="Add new restaurant">
+    <Drawer open onClose={onClose} width={'35%'} title="Add new project">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 w-full">
         <Row gutter={[16, 16]}>
           <Col span={24}>

@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Breadcrumb } from 'antd';
 import queryString from 'query-string';
-import { useNavigate, useParams } from 'react-router-dom';
 
 import { GET_USER_LIST_QUERY_KEY } from '@/components/constants';
 import useCenterService from '@/services/center.service';
@@ -14,29 +13,16 @@ import MemberTable from './components/MemberTable';
 export type FilterConditionType = {
   page: number;
   per_page: number;
-  person_external_id: string;
-  start_time?: string;
-  end_time?: string;
-  order?: string;
-  sort_by?: string;
-  duration?: string | number | null;
+  name: string;
 };
 
 const defaultFilter = {
   page: 1,
   per_page: 10,
-  person_external_id: '',
-  start_time: undefined,
-  end_time: undefined,
-  order: undefined,
-  sort_by: undefined,
-  duration: 0,
+  name: '',
 };
 
 const MemberManagement = () => {
-  const navigate = useNavigate();
-  const { id } = useParams<{ id: string }>();
-
   const [filterCondition, setFilterCondition] = useState<FilterConditionType>({
     ...defaultFilter,
     ...queryString.parse(location.search),
@@ -49,8 +35,6 @@ const MemberManagement = () => {
     queryFn: () => getMemberList(filterCondition),
     keepPreviousData: true,
   });
-
-  console.log('data', data);
 
   return (
     <>
