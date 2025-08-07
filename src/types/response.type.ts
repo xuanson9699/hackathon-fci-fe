@@ -26,17 +26,18 @@ type ResponseData<T> = {
 
 type PayloadPageOptions = { [key: string]: number | string | undefined | null };
 
-type RestaurantItem = {
-  restaurant_id: string;
+type CentertItem = {
+  id: string;
   name: string;
   created_by: string;
   created_at: string;
-  video_count?: number;
+  project_number: number;
+  member_number: number;
 
   latest_uploaded: string;
 };
 
-type RestaurantResponse = PaginationResponse<RestaurantItem>;
+type CenterResponse = PaginationResponse<CentertItem>;
 
 type RestaurantVideo = {
   video_id: string;
@@ -91,8 +92,8 @@ type VideosUploadedResponse = {
 export type {
   LoginResponse,
   PaginationResponse,
-  RestaurantResponse,
-  RestaurantItem,
+  CenterResponse,
+  CentertItem,
   ResponseData,
   PayloadPageOptions,
   RestaurantDetailResponse,

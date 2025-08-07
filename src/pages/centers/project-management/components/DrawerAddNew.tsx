@@ -2,19 +2,21 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button, Col, Drawer, Input, Row } from 'antd';
 import { Controller, useForm } from 'react-hook-form';
 
-import { GET_ALL_CENTER_QUERY_KEY } from '@/components/constants';
+import { GET_ALL_CENTER_QUERY_KEY, GET_CENTER_DETAIL_QUERY_KEY } from '@/components/constants';
 import FormFiled from '@/components/ui/form-field';
 import useCenterService from '@/services/center.service';
 
-type DrawerAddNewProps = {
+type DrawerAddNewPrjectProps = {
   onClose: () => void;
+  id: string;
 };
 
 type FormValues = {
   name: string;
+  description: string;
 };
 
-const DrawerAddNew = ({ onClose }: DrawerAddNewProps) => {
+const DrawerAddNewPrject = ({ onClose, id }: DrawerAddNewPrjectProps) => {
   const {
     control,
     handleSubmit,
@@ -23,25 +25,26 @@ const DrawerAddNew = ({ onClose }: DrawerAddNewProps) => {
     mode: 'onChange',
     defaultValues: {
       name: '',
+      description: '',
     },
   });
 
   const queryClient = useQueryClient();
 
-  const { createRestaurant } = useCenterService();
+  const { createProject } = useCenterService();
 
-  const createRestaurantMutation = useMutation({
-    mutationFn: (payload: { name: string }) => createRestaurant(payload.name),
+  const createProjectMutation = useMutation<FormValues>({
+    mutationFn: (payload) => createProject(id, payload),
     onSuccess: () => {
       onClose();
       queryClient.invalidateQueries({
-        queryKey: [GET_ALL_CENTER_QUERY_KEY],
+        queryKey: [GET_CENTER_DETAIL_QUERY_KEY],
       });
     },
   });
 
   const onSubmit = (data: FormValues) => {
-    createRestaurantMutation.mutate({ name: data.name });
+    createProjectMutation.mutate({ name: data.name, description: data.description });
   };
 
   return (
@@ -52,26 +55,25 @@ const DrawerAddNew = ({ onClose }: DrawerAddNewProps) => {
             <Controller
               name="name"
               control={control}
-              rules={{ required: 'Restaurant name is required' }}
+              rules={{ required: 'Project name is required' }}
               render={({ field, fieldState }) => (
-                <FormFiled label="Restaurant name" isRequire error={fieldState.error?.message}>
+                <FormFiled label="Project name" isRequire error={fieldState.error?.message}>
                   <Input {...field} placeholder="Please enter" />
                 </FormFiled>
               )}
             />
           </Col>
-          {/* <Col span={12}>
+          <Col span={24}>
             <Controller
-              name="address"
+              name="description"
               control={control}
-              rules={{ required: 'Address is required' }}
               render={({ field, fieldState }) => (
-                <FormFiled label="Address" isRequire error={fieldState.error?.message}>
-                  <Input {...field} placeholder="Please enter" />
+                <FormFiled label="Description">
+                  <Input.TextArea {...field} placeholder="Please enter" rows={4} />
                 </FormFiled>
               )}
             />
-          </Col> */}
+          </Col>
         </Row>
         <div className="flex gap-4 justify-end">
           <Button>Cancel</Button>
@@ -84,4 +86,4 @@ const DrawerAddNew = ({ onClose }: DrawerAddNewProps) => {
   );
 };
 
-export default DrawerAddNew;
+export default DrawerAddNewPrject;

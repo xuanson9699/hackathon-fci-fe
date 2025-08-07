@@ -3,40 +3,36 @@ import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Breadcrumb } from 'antd';
 import queryString from 'query-string';
-import { useNavigate, useParams } from 'react-router-dom';
 
-import { GET_CENTER_DETAIL_QUERY_KEY } from '@/components/constants';
+import { GET_USER_LIST_QUERY_KEY } from '@/components/constants';
 import useCenterService from '@/services/center.service';
 
-import FilterProjectBar from './components/FilterProjectBar';
-import ProjectTable from './components/ProjectTable';
+import FilterMemberBar from './components/FilterMemberBar';
+import MemberTable from './components/MemberTable';
 
 export type FilterConditionType = {
   page: number;
   per_page: number;
-  project_name: string;
+  name: string;
 };
 
 const defaultFilter = {
   page: 1,
   per_page: 10,
-  project_name: '',
+  name: '',
 };
 
-const ProjectManagement = () => {
-  const navigate = useNavigate();
-  const { id } = useParams<{ id: string }>();
-
+const MemberManagement = () => {
   const [filterCondition, setFilterCondition] = useState<FilterConditionType>({
     ...defaultFilter,
     ...queryString.parse(location.search),
   });
 
-  const { getDetail } = useCenterService();
+  const { getMemberList } = useCenterService();
 
   const { data, isFetching } = useQuery({
-    queryKey: [GET_CENTER_DETAIL_QUERY_KEY, id, filterCondition],
-    queryFn: () => getDetail(id ?? '', filterCondition),
+    queryKey: [GET_USER_LIST_QUERY_KEY, filterCondition],
+    queryFn: () => getMemberList(filterCondition),
     keepPreviousData: true,
   });
 
@@ -46,27 +42,20 @@ const ProjectManagement = () => {
         <Breadcrumb
           items={[
             {
-              title: (
-                <a className="text-xl font-semibold" href="#" onClick={() => navigate(-1)}>
-                  Center
-                </a>
-              ),
-            },
-            {
-              title: <span className="text-xl font-semibold">Project List</span>,
+              title: <span className="text-xl font-semibold">Member</span>,
             },
           ]}
         />
       </header>
 
       <div className="flex gap-4 p-20 py-5 bg-gray-100 h-full flex-col">
-        <FilterProjectBar
+        <FilterMemberBar
           filterCondition={filterCondition}
           setFilterCondition={setFilterCondition}
           defaultFilter={defaultFilter}
         />
 
-        <ProjectTable
+        <MemberTable
           dataSource={data?.data ?? []}
           filterCondition={filterCondition}
           setFilterCondition={setFilterCondition}
@@ -78,4 +67,4 @@ const ProjectManagement = () => {
   );
 };
 
-export default ProjectManagement;
+export default MemberManagement;

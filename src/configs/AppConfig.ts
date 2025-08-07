@@ -8,13 +8,23 @@ export default class AppConfig {
   public static readonly APP_AUTHORIZATION_CLIENT_ID = import.meta.env
     .VITE_APP_KEYCLOAK_AUTHORIZATION_CLIENT_ID;
 
-  public static readonly RESTAURANT = {
-    GET_ALL: (param: string) => `restaurants?${param}`,
-    GET_DETAIL: (id: string, queryParams: string) => `restaurants/${id}?${queryParams}`,
-    UPLOAD_VIDEO: (id: string) => `restaurants/${id}/videos`,
-    CREATE_NEW: () => 'restaurants',
+  public static readonly CENTER = {
+    GET_ALL: (param: string) => `centers?${param}`,
+    CREATES: () => 'centers',
+    GET_DETAIL: (id: string, queryParams: string) => `centers/${id}/projects?${queryParams}`,
+    UPLOAD_VIDEO: (id: string) => `centers/${id}/videos`,
+    CREATE_NEW: () => 'centers',
     GET_VIEDEOS_UPLOADED: (id: string, queryParams: string) =>
-      `restaurants/${id}/videos?${queryParams}`,
+      `centers/${id}/videos?${queryParams}`,
+    CREATES_PROJECT: (id: string) => `centers/${id}/projects`,
+    GET_MEMBER_LIST: (param: string) => `members?${param}`,
+    CREATES_MEMBER: () => 'members',
+    GET_REFERENCE_BY_PROJECT: (projectId: string, queryParams: string) =>
+      `project/${projectId}/references?${queryParams}`,
+
+    CREATES_REFERENCE: (id: string) => `project/${id}/references`,
+
+    GET_USER_INFO: (queryParams: string) => `member-info?${queryParams}`,
   };
 
   // User

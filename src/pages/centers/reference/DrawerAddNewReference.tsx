@@ -2,19 +2,26 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button, Col, Drawer, Input, Row } from 'antd';
 import { Controller, useForm } from 'react-hook-form';
 
-import { GET_ALL_CENTER_QUERY_KEY } from '@/components/constants';
+import {
+  GET_CENTER_DETAIL_QUERY_KEY,
+  GET_REFERENCE_BY_PROJECT_QUERY_KEY,
+} from '@/components/constants';
 import FormFiled from '@/components/ui/form-field';
 import useCenterService from '@/services/center.service';
 
-type DrawerAddNewProps = {
+type DrawerAddNewReferenceProps = {
   onClose: () => void;
+  projectId: string;
+  centerId: string;
 };
 
 type FormValues = {
-  name: string;
+  page_id: string;
+  page_title: string;
+  description: string;
 };
 
-const DrawerAddNew = ({ onClose }: DrawerAddNewProps) => {
+const DrawerAddNewReference = ({ onClose, projectId, centerId }: DrawerAddNewReferenceProps) => {
   const {
     control,
     handleSubmit,
@@ -22,56 +29,69 @@ const DrawerAddNew = ({ onClose }: DrawerAddNewProps) => {
   } = useForm<FormValues>({
     mode: 'onChange',
     defaultValues: {
-      name: '',
+      page_id: '',
+      page_title: '',
+      description: '',
     },
   });
 
   const queryClient = useQueryClient();
 
-  const { createRestaurant } = useCenterService();
+  const { createReference } = useCenterService();
 
-  const createRestaurantMutation = useMutation({
-    mutationFn: (payload: { name: string }) => createRestaurant(payload.name),
+  const createReferenceMutation = useMutation<FormValues>({
+    mutationFn: (payload) => createReference(projectId, { ...payload, center_id: centerId }),
     onSuccess: () => {
       onClose();
       queryClient.invalidateQueries({
-        queryKey: [GET_ALL_CENTER_QUERY_KEY],
+        queryKey: [GET_REFERENCE_BY_PROJECT_QUERY_KEY],
       });
     },
   });
 
   const onSubmit = (data: FormValues) => {
-    createRestaurantMutation.mutate({ name: data.name });
+    createReferenceMutation.mutate(data);
   };
 
   return (
-    <Drawer open onClose={onClose} width={'35%'} title="Add new project">
+    <Drawer open onClose={onClose} width={'35%'} title="Add new reference">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 w-full">
         <Row gutter={[16, 16]}>
           <Col span={24}>
             <Controller
-              name="name"
+              name="page_id"
               control={control}
-              rules={{ required: 'Restaurant name is required' }}
+              rules={{ required: 'Page id is required' }}
               render={({ field, fieldState }) => (
-                <FormFiled label="Restaurant name" isRequire error={fieldState.error?.message}>
+                <FormFiled label="Page id" isRequire error={fieldState.error?.message}>
                   <Input {...field} placeholder="Please enter" />
                 </FormFiled>
               )}
             />
           </Col>
-          {/* <Col span={12}>
+          <Col span={24}>
             <Controller
-              name="address"
+              name="page_title"
               control={control}
-              rules={{ required: 'Address is required' }}
+              rules={{ required: 'Page title is required' }}
               render={({ field, fieldState }) => (
-                <FormFiled label="Address" isRequire error={fieldState.error?.message}>
+                <FormFiled label="Page title" isRequire error={fieldState.error?.message}>
                   <Input {...field} placeholder="Please enter" />
                 </FormFiled>
               )}
             />
-          </Col> */}
+          </Col>
+          <Col span={24}>
+            <Controller
+              name="description"
+              control={control}
+              render={({ field }) => (
+                <FormFiled label="Description">
+                  <Input.TextArea {...field} placeholder="Please enter" rows={4} />
+                </FormFiled>
+              )}
+            />
+          </Col>
         </Row>
         <div className="flex gap-4 justify-end">
           <Button>Cancel</Button>
@@ -84,4 +104,4 @@ const DrawerAddNew = ({ onClose }: DrawerAddNewProps) => {
   );
 };
 
-export default DrawerAddNew;
+export default DrawerAddNewReference;

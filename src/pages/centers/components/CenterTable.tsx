@@ -7,18 +7,18 @@ import { styled } from 'styled-components';
 import ConfirmModal from '@/components/ui/confirm-modal';
 import PaginationControl from '@/components/ui/pagination-control';
 import { formatDateTime } from '@/components/utils/date';
-import { RestaurantItem } from '@/types';
+import { CentertItem } from '@/types';
 
 // Interface for table data
-interface RestaurantTableProps<T = any> {
-  data?: RestaurantItem[];
+interface CenterTableProps<T = any> {
+  data?: CentertItem[];
   loading?: boolean;
   filterCondition: T;
   setFilterCondition?: (condition: T) => void;
   totalItem: number;
 }
 
-const RestaurantTable: React.FC<RestaurantTableProps> = (props) => {
+const CenterTable: React.FC<CenterTableProps> = (props) => {
   const {
     data = [],
     loading = false,
@@ -31,8 +31,8 @@ const RestaurantTable: React.FC<RestaurantTableProps> = (props) => {
 
   const [selectedDeleteId, setSelectedDeleteId] = useState('');
 
-  const handleNavigate = (record: RestaurantItem) => {
-    navigate(`/restaurant/${record.restaurant_id}`, {
+  const handleNavigate = (record: CentertItem) => {
+    navigate(`/center/${record.id}/project`, {
       state: { fromListUrl: location.pathname + location.search },
     });
   };
@@ -49,7 +49,7 @@ const RestaurantTable: React.FC<RestaurantTableProps> = (props) => {
         {data?.map((item) => {
           return (
             <StyledCol
-              key={item.restaurant_id}
+              key={item.id}
               span={8}
               className="group flex transition-all duration-200 hover:shadow-lg hover:opacity-95 cursor-pointer"
               onClick={() => handleNavigate(item)}
@@ -63,17 +63,15 @@ const RestaurantTable: React.FC<RestaurantTableProps> = (props) => {
                 <div className="flex flex-col gap-2 p-2">
                   <Row className="b-bottom">
                     <Col span={8} className="text-secondary">
-                      Video
+                      Members
                     </Col>
-                    <Col span={16}>{item.video_count}</Col>
+                    <Col span={16}>{item.member_number}</Col>
                   </Row>
                   <Row>
                     <Col span={8} className="text-secondary">
-                      Latest Uploadded
+                      Projects
                     </Col>
-                    <Col span={16}>
-                      {formatDateTime({ date: item.latest_uploaded, keepUtc: true })}
-                    </Col>
+                    <Col span={16}>{item.project_number}</Col>
                   </Row>
                 </div>
               </Card>
@@ -101,7 +99,7 @@ const RestaurantTable: React.FC<RestaurantTableProps> = (props) => {
   );
 };
 
-export default RestaurantTable;
+export default CenterTable;
 
 const StyledCol = styled(Col)`
   &:hover .ant-card-head {

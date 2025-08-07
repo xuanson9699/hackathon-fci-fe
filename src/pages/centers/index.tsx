@@ -4,12 +4,11 @@ import { useQuery } from '@tanstack/react-query';
 import { Breadcrumb } from 'antd';
 import queryString from 'query-string';
 
-import { GET_ALL_RESTAURANT_QUERY_KEY } from '@/components/constants';
-import centerDatas from '@/components/mockData.ts/centerData';
-import useRestaurantService from '@/services/restaurant.service';
+import { GET_ALL_CENTER_QUERY_KEY } from '@/components/constants';
+import useCenterService from '@/services/center.service';
 
+import CenterTable from './components/CenterTable';
 import FilterBar from './components/FilterBar';
-import RestaurantTable from './components/RestaurantTable';
 
 export type FilterConditionType = {
   page: number;
@@ -35,13 +34,21 @@ const Centers = () => {
     ...queryString.parse(location.search),
   });
 
+  const { getAll } = useCenterService();
+
+  const { data, isLoading } = useQuery({
+    queryKey: [GET_ALL_CENTER_QUERY_KEY, filterCondition],
+    queryFn: () => getAll(filterCondition),
+    keepPreviousData: true,
+  });
+
   return (
     <>
       <header className="shrink-0 flex items-center shadow h-14 px-20 sticky z-50 bg-white top-0">
         <Breadcrumb
           items={[
             {
-              title: <span className="text-xl font-semibold">Restaurant</span>,
+              title: <span className="text-xl font-semibold">Center</span>,
             },
           ]}
         />
@@ -52,11 +59,11 @@ const Centers = () => {
           setFilterCondition={setFilterCondition}
           defaultFilter={defaultFilter}
         />
-        <RestaurantTable
-          data={centerDatas}
+        <CenterTable
+          data={data?.data ?? []}
           filterCondition={filterCondition}
           setFilterCondition={setFilterCondition}
-          totalItem={10}
+          totalItem={data?.meta?.total ?? 0}
         />
       </div>
     </>
