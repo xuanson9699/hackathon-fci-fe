@@ -10,41 +10,36 @@ import ButtonBase from '@/components/ui/button-base';
 import FormFiled from '@/components/ui/form-field';
 
 import { FilterConditionType } from '..';
-import DrawerAddNewPrject from './DrawerAddNew';
+import DrawerAddNewReference from './DrawerAddNewReference';
 
 interface FilterCustomerBarProps {
   filterCondition: FilterConditionType;
   setFilterCondition: Dispatch<SetStateAction<FilterConditionType>>;
-  defaultFilter: FilterConditionType;
 }
 
-const FilterProjectBar = ({
-  filterCondition,
-  setFilterCondition,
-  defaultFilter,
-}: FilterCustomerBarProps) => {
-  const { id } = useParams<{ id: string }>();
+const FilterReferenceBar = ({ filterCondition, setFilterCondition }: FilterCustomerBarProps) => {
+  const { id, projectId } = useParams<{ projectId: string; id: string }>();
 
   const [isShowDrawer, setIsShowDrawer] = useState<boolean>(false);
 
   const { control, watch, reset, setValue } = useForm<any>({
     defaultValues: {
-      project_name: filterCondition.project_name || '',
+      search_term: filterCondition.search_term || '',
     },
   });
 
-  const project_name = useDebouncedValue(watch('project_name'));
+  const search_term = useDebouncedValue(watch('search_term'));
 
   useEffect(() => {
     const condition = {
-      project_name,
+      search_term,
     };
 
     setFilterCondition((prevFilter: FilterConditionType) => ({
       ...prevFilter,
       ...condition,
     }));
-  }, [project_name]);
+  }, [search_term]);
 
   const handleClickButtonAddNew = () => {
     setIsShowDrawer(true);
@@ -58,13 +53,13 @@ const FilterProjectBar = ({
             name="project_name"
             control={control}
             render={({ field }) => (
-              <FormFiled label="Page title">
+              <FormFiled label="Project name">
                 <Input
                   {...field}
                   allowClear
                   placeholder={''}
                   prefix={<SearchOutlined className="text-gray-400" />}
-                  onClear={() => setFilterCondition({ ...filterCondition, project_name: '' })}
+                  onClear={() => setFilterCondition({ ...filterCondition, search_term: '' })}
                   className="w-full sm:w-88"
                 />
               </FormFiled>
@@ -78,13 +73,19 @@ const FilterProjectBar = ({
             className="text-secondary"
             onClick={handleClickButtonAddNew}
           >
-            Create new project
+            Create new reference
           </ButtonBase>
         </FormFiled>
       </div>
 
-      {isShowDrawer && <DrawerAddNewPrject onClose={() => setIsShowDrawer(false)} id={id ?? ''} />}
+      {isShowDrawer && (
+        <DrawerAddNewReference
+          onClose={() => setIsShowDrawer(false)}
+          projectId={projectId ?? ''}
+          centerId={id ?? ''}
+        />
+      )}
     </>
   );
 };
-export default FilterProjectBar;
+export default FilterReferenceBar;

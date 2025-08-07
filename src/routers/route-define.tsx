@@ -5,6 +5,7 @@ import { Navigate, Outlet } from 'react-router-dom';
 import MainLayout from '@/components/layouts/MainLayout';
 import Centers from '@/pages/centers';
 import ProjectManagement from '@/pages/centers/project-management';
+import ReferencePage from '@/pages/centers/reference';
 import MemberManagement from '@/pages/members';
 import { RouteExtends } from '@/types';
 
@@ -26,8 +27,17 @@ const routes: RouteExtends[] = [
             element: <Centers />,
           },
           {
-            path: ':id',
-            element: <ProjectManagement />,
+            path: ':id/project',
+            children: [
+              {
+                index: true,
+                element: <ProjectManagement />,
+              },
+              {
+                path: ':projectId/reference',
+                element: <ReferencePage />,
+              },
+            ],
           },
         ],
       },

@@ -32,7 +32,7 @@ const CenterTable: React.FC<CenterTableProps> = (props) => {
   const [selectedDeleteId, setSelectedDeleteId] = useState('');
 
   const handleNavigate = (record: CentertItem) => {
-    navigate(`/center/${record.id}`, {
+    navigate(`/center/${record.id}/project`, {
       state: { fromListUrl: location.pathname + location.search },
     });
   };

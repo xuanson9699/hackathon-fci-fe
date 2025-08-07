@@ -19,6 +19,12 @@ export default class AppConfig {
     CREATES_PROJECT: (id: string) => `centers/${id}/projects`,
     GET_MEMBER_LIST: (param: string) => `members?${param}`,
     CREATES_MEMBER: () => 'members',
+    GET_REFERENCE_BY_PROJECT: (projectId: string, queryParams: string) =>
+      `project/${projectId}/references?${queryParams}`,
+
+    CREATES_REFERENCE: (id: string) => `project/${id}/references`,
+
+    GET_USER_INFO: (queryParams: string) => `member-info?${queryParams}`,
   };
 
   // User

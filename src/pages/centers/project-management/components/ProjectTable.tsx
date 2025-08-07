@@ -1,13 +1,13 @@
 import { type TableProps } from 'antd';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { DATE_FORMAT_DDMMYYYY } from '@/components/constants';
 import TableComponent from '@/components/ui/table-component';
 import { formatDateTime } from '@/components/utils/date';
-import { RestaurantEventItem } from '@/types';
 
 // Interface for table data
 interface ProjectTableProps<T = any> {
-  dataSource?: RestaurantEventItem[];
+  dataSource?: any[];
   loading?: boolean;
   filterCondition: T;
   setFilterCondition?: (condition: T) => void;
@@ -23,7 +23,10 @@ const ProjectTable: React.FC<ProjectTableProps> = (props) => {
     total,
   } = props;
 
-  const columns: TableProps<RestaurantEventItem>['columns'] = [
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+
+  const columns: TableProps<any>['columns'] = [
     {
       title: 'Center',
       dataIndex: 'center_name',
@@ -78,6 +81,9 @@ const ProjectTable: React.FC<ProjectTableProps> = (props) => {
         totalItem={total}
         showPagination
         scrollY="60vh"
+        handleDoubleRowClick={(record) => {
+          navigate(`/center/${id}/project/${record?.id}/reference`);
+        }}
       />
     </>
   );

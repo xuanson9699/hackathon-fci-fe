@@ -2,26 +2,20 @@ import queryString from 'query-string';
 
 import useHttpClient from '@/components/hooks/useHttpClient';
 import AppConfig from '@/configs/AppConfig';
-import {
-  PayloadPageOptions,
-  RestaurantDetailResponse,
-  CentertItem,
-  CenterResponse,
-  VideosUploadedResponse,
-} from '@/types';
+import { CenterResponse, CentertItem, PayloadPageOptions, RestaurantDetailResponse } from '@/types';
 
 type ResultCenterService = {
   getAll: (pageOptions?: PayloadPageOptions) => Promise<CenterResponse>;
-  getDetail: (id: string, pageOptions?: PayloadPageOptions) => Promise<RestaurantDetailResponse>;
-  uploadVideo: (file: File, id: string) => Promise<any>;
+  getDetail: (id: string, pageOptions?: PayloadPageOptions) => Promise<any>;
   createCenters: () => Promise<CentertItem>;
-  getVideosUploaded: (
-    id: string,
-    pageOptions?: PayloadPageOptions,
-  ) => Promise<VideosUploadedResponse>;
   createProject: (id: string, body: any) => Promise<any>;
   getMemberList: (pageOptions?: PayloadPageOptions) => Promise<CenterResponse>;
   createNewMember: (body: any) => Promise<any>;
+
+  getReferenceByProject: (id: string, pageOptions?: PayloadPageOptions) => Promise<any>;
+  createReference: (projectId: string, body: any) => Promise<any>;
+
+  getUserInfo: (payload: PayloadPageOptions) => Promise<any>;
 };
 
 const useCenterService = (): ResultCenterService => {
@@ -51,11 +45,14 @@ const useCenterService = (): ResultCenterService => {
     return httpClient.get<RestaurantDetailResponse>(AppConfig.CENTER.GET_DETAIL(id, queryParams));
   };
 
-  const uploadVideo = (file: File, id: string) => {
-    const formData = new FormData();
-    formData.append('file', file);
-
-    return httpClient.post(AppConfig.CENTER.UPLOAD_VIDEO(id), formData);
+  const getReferenceByProject = (pageId: string, pageOptions?: PayloadPageOptions) => {
+    let queryParams = '';
+    if (pageOptions) {
+      queryParams = queryString.stringify(pageOptions);
+    }
+    return httpClient.get<RestaurantDetailResponse>(
+      AppConfig.CENTER.GET_REFERENCE_BY_PROJECT(pageId, queryParams),
+    );
   };
 
   const createCenters = () => {
@@ -66,29 +63,32 @@ const useCenterService = (): ResultCenterService => {
     return httpClient.post<any>(AppConfig.CENTER.CREATES_PROJECT(id), body);
   };
 
+  const createReference = (projectId: string, body: any) => {
+    return httpClient.post<any>(AppConfig.CENTER.CREATES_REFERENCE(projectId), body);
+  };
+
   const createNewMember = (body: any) => {
     return httpClient.post<any>(AppConfig.CENTER.CREATES_MEMBER(), body);
   };
 
-  const getVideosUploaded = (id: string, pageOptions?: PayloadPageOptions) => {
+  const getUserInfo = (payload?: PayloadPageOptions) => {
     let queryParams = '';
-    if (pageOptions) {
-      queryParams = queryString.stringify(pageOptions);
+    if (payload) {
+      queryParams = queryString.stringify(payload);
     }
-    return httpClient.get<VideosUploadedResponse>(
-      AppConfig.CENTER.GET_VIEDEOS_UPLOADED(id, queryParams),
-    );
+    return httpClient.get<any>(AppConfig.CENTER.GET_USER_INFO(queryParams));
   };
 
   return {
     getAll,
     getDetail,
-    uploadVideo,
     createCenters,
-    getVideosUploaded,
     createProject,
     getMemberList,
     createNewMember,
+    getReferenceByProject,
+    createReference,
+    getUserInfo,
   };
 };
 
